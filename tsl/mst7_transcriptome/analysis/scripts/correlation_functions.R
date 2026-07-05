@@ -1,20 +1,30 @@
+required_pkgs <- c(
+  "dplyr", "readr", "tibble", "purrr", "ggplot2", "tidyr", "here", "reshape2"
+)
+missing_pkgs <- required_pkgs[!vapply(required_pkgs, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))]
+if (length(missing_pkgs) > 0) {
+  warning("Missing packages for correlation_functions.R: ", paste(missing_pkgs, collapse = ", "))
+}
+
 library(dplyr)
 library(readr)
 library(tibble)
 library(purrr)
 library(ggplot2)
-library(reshape2)
+library(tidyr)
 library(here)
+library(reshape2)
 
 load_tpm_matrix <- function(tpm_file = here("raw", "all_samples_tpm_matrix.txt")) {
-  read_delim(tpm_file, delim = "\t", show_col_types = FALSE)
+  # TPM matrix is CSV format with gene IDs as first column
+  read_csv(tpm_file, show_col_types = FALSE) %>%
+    column_to_rownames(var = "target") %>%
+    as.matrix()
 }
 
 compute_correlation_matrix <- function(tpm_matrix, sample_names, method = "pearson") {
-  mat <- tpm_matrix %>%
-    select(all_of(sample_names)) %>%
-    as.matrix()
-
+  # TPM matrix is already a matrix, subset by column
+  mat <- tpm_matrix[, sample_names, drop = FALSE]
   cor(mat, use = "pairwise.complete.obs", method = method)
 }
 

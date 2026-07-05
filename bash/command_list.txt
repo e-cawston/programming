@@ -1,0 +1,2 @@
+## A command to convert a GFF file in .txt format to a csv 
+	awk 'BEGIN{OFS=","} !/^#/ { $1=$1; print }' input.txt > output.csv

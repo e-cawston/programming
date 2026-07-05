@@ -1,13 +1,24 @@
+required_pkgs <- c(
+  "dplyr", "readr", "purrr", "stringr", "tibble", "here", "UpSetR"
+)
+missing_pkgs <- required_pkgs[!vapply(required_pkgs, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))]
+if (length(missing_pkgs) > 0) {
+  warning("Missing packages for upset_functions.R: ", paste(missing_pkgs, collapse = ", "))
+}
+
+suppress_warnings <- function(expr) {
+  tryCatch(expr, error = function(e) {
+    warning("Failed to load package: ", e$message)
+  })
+}
+
 library(dplyr)
 library(readr)
 library(purrr)
 library(stringr)
 library(tibble)
 library(here)
-
-if (requireNamespace("UpSetR", quietly = TRUE)) {
-  library(UpSetR)
-}
+suppress_warnings(library(UpSetR))
 
 extract_deg_ids <- function(dge_table,
                             qval_threshold = 0.05,

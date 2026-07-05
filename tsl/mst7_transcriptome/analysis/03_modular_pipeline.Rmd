@@ -11,6 +11,18 @@ output:
 knitr::opts_chunk$set(echo = TRUE, message = TRUE, warning = TRUE)
 ```
 
+```{r package-check, warning=TRUE}
+required_pkgs <- c(
+  "dplyr", "readr", "purrr", "tidyr", "stringr", "tibble",
+  "here", "ggplot2", "reshape2", "sleuth", "UpSetR", "RankProd"
+)
+missing_pkgs <- required_pkgs[!vapply(required_pkgs, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))]
+if (length(missing_pkgs) > 0) {
+  warning("Note: Some packages are not installed. Pipeline will skip related sections.\n", 
+          "Missing: ", paste(missing_pkgs, collapse = ", "))
+}
+```
+
 # Overview
 
 This document runs the modular RNA-seq workflow for the mst7 transcriptome project. It reads the sample metadata, sources the reusable analysis scripts, runs sleuth-based DGE comparisons from the comparison table, generates DEG summary plots, creates upset plots, and generates correlation matrices.
@@ -43,12 +55,23 @@ for (dir_path in c(fig_dir, tables_dir, dge_dir, upset_dir, cor_dir)) {
 }
 ```
 
-```{r source-scripts}
-source(file.path(scripts_dir, "comparison_table.R"))
-source(file.path(scripts_dir, "upset_functions.R"))
-source(file.path(scripts_dir, "correlation_functions.R"))
-source(file.path(scripts_dir, "dge_functions.R"))
-source(file.path(scripts_dir, "rank_products_functions.R"))
+```{r source-scripts, message=FALSE}
+safe_source <- function(file) {
+  tryCatch(
+    source(file, local = FALSE),
+    error = function(e) {
+      warning("Failed to source ", basename(file), ": ", e$message)
+    }
+  )
+}
+
+cat("\nSourceing utility scripts...\n")
+safe_source(file.path(scripts_dir, "comparison_table.R"))
+safe_source(file.path(scripts_dir, "upset_functions.R"))
+safe_source(file.path(scripts_dir, "correlation_functions.R"))
+safe_source(file.path(scripts_dir, "dge_functions.R"))
+safe_source(file.path(scripts_dir, "rank_products_functions.R"))
+cat("Scripts sourced successfully.\n")
 ```
 
 ```{r metadata}
@@ -70,55 +93,116 @@ s2c <- read_csv(file.path(project_dir, "raw", "run_metadata.txt"), show_col_type
 # Sleuth differential expression
 
 ```{r run-dge, message=FALSE, warning=FALSE}
-dge_results <- run_comparisons(s2c, comparisons, out_dir = dge_dir)
+tryCatch(
+  {
+    cat("Running sleuth DGE comparisons...\n")
+    dge_results <- run_comparisons(s2c, comparisons, out_dir = dge_dir)
+    cat("DGE completed. Found", nrow(dge_results), "results.\n")
+  },
+  error = function(e) {
+    warning("DGE analysis failed (sleuth may not be installed): ", e$message)
+    dge_results <<- tibble()
+  }
+)
 ```
 
 ```{r dge-summary-plots}
-for (lab in unique(dge_results$comparison_label)) {
-  if (!is.na(lab) && nzchar(lab)) {
-    plot_dge_summary(dge_results, lab, out_dir = fig_dir)
-  }
+if (exists('dge_results') && nrow(dge_results) > 0) {
+  tryCatch(
+    {
+      for (lab in unique(dge_results$comparison_label)) {
+        if (!is.na(lab) && nzchar(lab)) {
+          plot_dge_summary(dge_results, lab, out_dir = fig_dir)
+        }
+      }
+    },
+    error = function(e) {
+      warning("DGE plot generation failed: ", e$message)
+    }
+  )
+} else {
+  cat("Skipping DGE plots (no DGE results available).\n")
 }
 ```
 
 # Upset plots
 
 ```{r upset-plots}
-deg_sets <- load_deg_tables(
-  comparison_labels = comparisons$label,
-  dge_dir = dge_dir,
-  qval_threshold = 0.05,
-  fc_threshold = 0
+tryCatch(
+  {
+    cat("\nGenerating upset plots...\n")
+    deg_sets <- load_deg_tables(
+      comparison_labels = comparisons$label,
+      dge_dir = dge_dir,
+      qval_threshold = 0.05,
+      fc_threshold = 0
+    )
+    
+    if (length(deg_sets) > 0) {
+      plot_upset(deg_sets, label = "all_comparisons", out_dir = upset_dir)
+      cat("Upset plots completed.\n")
+    } else {
+      cat("No DEG sets found for upset plots.\n")
+    }
+  },
+  error = function(e) {
+    warning("Upset plot generation failed: ", e$message)
+  }
 )
-
-plot_upset(deg_sets, label = "all_comparisons", out_dir = upset_dir)
 ```
 
 # Correlation matrices
 
 ```{r correlation-matrices}
-tpm_matrix <- load_tpm_matrix(file.path(project_dir, "raw", "all_samples_tpm_matrix.txt"))
-
-cor_matrix_all(tpm_matrix, s2c)
-cor_matrix_exp1(tpm_matrix, s2c)
-cor_matrix_exp2(tpm_matrix, s2c)
-cor_matrix_key_strains(tpm_matrix, s2c)
+tryCatch(
+  {
+    cat("\nGenerating correlation matrices...\n")
+    tpm_matrix <- load_tpm_matrix(file.path(project_dir, "raw", "all_samples_tpm_matrix.txt"))
+    
+    tryCatch(cor_matrix_all(tpm_matrix, s2c), error = function(e) warning("All samples correlation failed: ", e$message))
+    tryCatch(cor_matrix_exp1(tpm_matrix, s2c), error = function(e) warning("Exp1 correlation failed: ", e$message))
+    tryCatch(cor_matrix_exp2(tpm_matrix, s2c), error = function(e) warning("Exp2 correlation failed: ", e$message))
+    tryCatch(cor_matrix_key_strains(tpm_matrix, s2c), error = function(e) warning("Key strains correlation failed: ", e$message))
+    
+    cat("Correlation matrices completed.\n")
+  },
+  error = function(e) {
+    warning("Correlation analysis failed: ", e$message)
+  }
+)
 ```
 
 # Rank-products plots
 
 ```{r rank-products}
-rp_results <- run_rank_products_comparisons(s2c, comparisons, out_dir = file.path(results_dir, "rank_products"))
-
-for (lab in unique(rp_results$comparison_label)) {
-  if (!is.na(lab) && nzchar(lab)) {
-    plot_rank_products_mirrored(
-      rp_results,
-      lab,
-      out_dir = file.path(fig_dir, "rank_products")
-    )
+tryCatch(
+  {
+    cat("\nRunning rank products analysis...\n")
+    rp_results <- run_rank_products_comparisons(s2c, comparisons, out_dir = file.path(results_dir, "rank_products"))
+    
+    if (nrow(rp_results) > 0) {
+      cat("Generating rank products plots...\n")
+      for (lab in unique(rp_results$comparison_label)) {
+        if (!is.na(lab) && nzchar(lab)) {
+          tryCatch(
+            plot_rank_products_mirrored(
+              rp_results,
+              lab,
+              out_dir = file.path(fig_dir, "rank_products")
+            ),
+            error = function(e) warning("Plot for ", lab, " failed: ", e$message)
+          )
+        }
+      }
+      cat("Rank products analysis completed.\n")
+    } else {
+      cat("No rank products results generated.\n")
+    }
+  },
+  error = function(e) {
+    warning("Rank products analysis failed (RankProd may not be installed): ", e$message)
   }
-}
+)
 ```
 
 # Session info

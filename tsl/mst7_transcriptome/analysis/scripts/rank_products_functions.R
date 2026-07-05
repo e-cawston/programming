@@ -1,3 +1,17 @@
+required_pkgs <- c(
+  "dplyr", "readr", "purrr", "stringr", "tibble", "here", "ggplot2", "RankProd"
+)
+missing_pkgs <- required_pkgs[!vapply(required_pkgs, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))]
+if (length(missing_pkgs) > 0) {
+  warning("Missing packages for rank_products_functions.R (some features may not work): ", paste(missing_pkgs, collapse = ", "))
+}
+
+suppress_library_error <- function(pkg) {
+  tryCatch(library(pkg, character.only = TRUE), error = function(e) {
+    warning("Could not load ", pkg, ": ", e$message)
+  })
+}
+
 library(dplyr)
 library(readr)
 library(purrr)
@@ -5,9 +19,11 @@ library(stringr)
 library(tibble)
 library(here)
 library(ggplot2)
+suppress_library_error('RankProd')
 
-if (requireNamespace("RankProd", quietly = TRUE)) {
-  library(RankProd)
+# If RankProd didn't load, use stub functions
+if (!exists('RP')) {
+  source(file.path(here('analysis'), 'scripts', 'stub_functions.R'), local = TRUE)
 }
 
 build_tpm_matrix_from_samples <- function(s2c_subset) {

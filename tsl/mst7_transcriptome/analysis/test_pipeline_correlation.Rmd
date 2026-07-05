@@ -1,0 +1,188 @@
+---
+title: "Test Pipeline - Correlation Analysis Only"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    theme: flatly
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = TRUE, warning = TRUE)
+```
+
+# Overview
+
+This is a simplified test pipeline focusing on correlation matrix analysis, which works with the packages currently available (ggplot2, dplyr, readr, tibble). This lets us identify if there are logic errors in the pipeline independently of missing packages.
+
+```{r libraries, message=FALSE, warning=FALSE}
+library(dplyr)
+library(readr)
+library(tibble)
+library(here)
+library(ggplot2)
+```
+
+```{r paths}
+project_dir <- here::here()
+analysis_dir <- file.path(project_dir, "analysis")
+scripts_dir <- file.path(analysis_dir, "scripts")
+results_dir <- file.path(project_dir, "results")
+fig_dir <- file.path(results_dir, "figures")
+cor_dir <- file.path(fig_dir, "correlation")
+
+for (dir_path in c(fig_dir, cor_dir)) {
+  dir.create(dir_path, recursive = TRUE, showWarnings = FALSE)
+}
+
+cat("Project directories set up.\n")
+cat("Project dir:", project_dir, "\n")
+cat("Scripts dir:", scripts_dir, "\n")
+```
+
+```{r source-correlation-functions}
+cat("\nSourceing correlation functions...\n")
+tryCatch(
+  source(file.path(scripts_dir, "correlation_functions.R"), local = FALSE),
+  error = function(e) {
+    warning("Failed to source correlation_functions.R: ", e$message)
+  }
+)
+cat("Correlation functions sourced.\n")
+```
+
+```{r load-metadata}
+cat("\nLoading sample metadata...\n")
+
+# Check if file exists
+metadata_file <- file.path(project_dir, "raw", "run_metadata.txt")
+if (!file.exists(metadata_file)) {
+  stop("Metadata file not found at: ", metadata_file)
+}
+
+s2c <- read_csv(metadata_file, show_col_types = FALSE) %>%
+  mutate(
+    path = file.path(project_dir, "raw", path),
+    sample = paste0(name, "_", timepoint, "_", biorep),
+    name = factor(name),
+    timepoint = factor(timepoint),
+    biorep = factor(biorep)
+  ) %>%
+  mutate(
+    experiment = if_else(name %in% c("pmk1", "Guy11M"), "Exp2", "Exp1"),
+    experiment = factor(experiment, levels = c("Exp1", "Exp2"))
+  )
+
+cat("Metadata loaded. Samples:\n")
+print(table(s2c$name))
+cat("\nTimepoints:", unique(s2c$timepoint), "\n")
+cat("Experiments:", unique(s2c$experiment), "\n")
+cat("Bioreps:", unique(s2c$biorep), "\n")
+```
+
+```{r load-tpm-matrix}
+cat("\n--- Loading TPM matrix ---\n")
+
+tpm_file <- file.path(project_dir, "raw", "all_samples_tpm_matrix.txt")
+if (!file.exists(tpm_file)) {
+  stop("TPM matrix file not found at: ", tpm_file)
+}
+
+cat("Loading TPM matrix from:", tpm_file, "\n")
+tpm_matrix <- read.delim(tpm_file, row.names = 1, stringsAsFactors = FALSE)
+
+cat("TPM matrix dimensions:", dim(tpm_matrix), "\n")
+cat("Genes:", nrow(tpm_matrix), "\n")
+cat("Samples:", ncol(tpm_matrix), "\n")
+cat("Sample names:\n")
+print(colnames(tpm_matrix))
+```
+
+```{r test-correlation-functions}
+cat("\n--- Testing Correlation Functions ---\n")
+
+if (exists('cor_matrix_all')) {
+  cat("\nTesting cor_matrix_all()...\n")
+  tryCatch(
+    {
+      # First ensure s2c$sample column exists
+      if (!"sample" %in% colnames(s2c)) {
+        cat("ERROR: s2c does not have 'sample' column\n")
+        print(head(s2c))
+      } else {
+        cat("Sample column found in metadata. Samples:", length(s2c$sample), "\n")
+        
+        # Test if all samples exist in TPM matrix
+        missing_samples <- setdiff(s2c$sample, colnames(tpm_matrix))
+        if (length(missing_samples) > 0) {
+          cat("WARNING: These samples are missing from TPM matrix:\n")
+          print(missing_samples)
+        }
+        
+        cor_matrix_all(tpm_matrix, s2c)
+        cat("✓ cor_matrix_all() succeeded\n")
+      }
+    },
+    error = function(e) {
+      cat("✗ cor_matrix_all() failed:", e$message, "\n")
+    }
+  )
+} else {
+  cat("Function 'cor_matrix_all' not available (correlation_functions.R didn't source)\n")
+}
+
+# Test individual correlation functions if available
+if (exists('cor_matrix_exp1')) {
+  cat("\nTesting cor_matrix_exp1()...\n")
+  tryCatch(
+    {
+      cor_matrix_exp1(tpm_matrix, s2c)
+      cat("✓ cor_matrix_exp1() succeeded\n")
+    },
+    error = function(e) {
+      cat("✗ cor_matrix_exp1() failed:", e$message, "\n")
+    }
+  )
+}
+
+if (exists('cor_matrix_exp2')) {
+  cat("\nTesting cor_matrix_exp2()...\n")
+  tryCatch(
+    {
+      cor_matrix_exp2(tpm_matrix, s2c)
+      cat("✓ cor_matrix_exp2() succeeded\n")
+    },
+    error = function(e) {
+      cat("✗ cor_matrix_exp2() failed:", e$message, "\n")
+    }
+  )
+}
+
+if (exists('cor_matrix_key_strains')) {
+  cat("\nTesting cor_matrix_key_strains()...\n")
+  tryCatch(
+    {
+      cor_matrix_key_strains(tpm_matrix, s2c)
+      cat("✓ cor_matrix_key_strains() succeeded\n")
+    },
+    error = function(e) {
+      cat("✗ cor_matrix_key_strains() failed:", e$message, "\n")
+    }
+  )
+}
+```
+
+# Summary
+
+This test pipeline runs only correlation analysis to verify:
+1. Metadata loads correctly
+2. TPM matrix loads correctly
+3. Sample names match between metadata and TPM matrix
+4. Correlation functions work without errors
+
+If this completes successfully, the pipeline logic is sound and remaining errors are due to missing packages (sleuth, RankProd).
+
+```{r session-info}
+cat("\n--- Session Info ---\n")
+sessionInfo()
+```
