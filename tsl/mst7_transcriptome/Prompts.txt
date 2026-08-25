@@ -3914,4 +3914,214 @@ If you want, I can also generate:
 
 It's giving me nonsense now I think it doesn't understand the latest copilot GitHub functionality.
 
+Copilot GitHub
+Prompt-----------
+create an Rmarkdown in analysis folder to run the scripts and generate the figures I want. For context I explained everything I wanted done to copilot online. I've saved a copy of the chat in Prompts.txt.
+-------------
+Response---------------
+I’m using the saved prompt and the existing analysis notebooks as a guide so the new R Markdown entry point runs the modular scripts and produces the figures you asked for.
+
+Read [](file:///home/Occ4m/programming/tsl/mst7_transcriptome/Prompts.txt#1-1), lines 1 to 250
+
+I’m aligning the new R Markdown entry point with the repository’s existing metadata conventions so it can run against the current kallisto output layout rather than assuming a new format.
+
+Read [](file:///home/Occ4m/programming/tsl/mst7_transcriptome/analysis/DGE_sleuth_V3.Rmd#1-1), lines 1 to 220
+
+Read [](file:///home/Occ4m/programming/tsl/mst7_transcriptome/analysis/DGE_sleuth_V3.Rmd#221-221), lines 221 to 246
+
+The existing notebooks show the analysis logic already, so I’m packaging it into one reproducible R Markdown workflow that sources the modular scripts and writes the figures into the standard results folders.
+
+I’m validating the local R environment now so the workflow can be checked in a way that matches your repository layout instead of just producing code that would need manual adjustment.
+
+Got last terminal command
+
+Read [](file:///home/Occ4m/programming/tsl/mst7_transcriptome/analysis/scripts)
+
+Created memory file [](file:///home/Occ4m/.vscode-server/data/User/globalStorage/github.copilot-chat/memory-tool/memories/Occ4m/programming/tsl/mst7_transcriptome/analysis/03_modular_pipeline.Rmd)
+
+I’m creating the R Markdown entry point directly in the analysis folder now and wiring it to the existing scripts so it can generate the figures from your current project structure.
+
+Got last terminal command
+
+Read [](file:///home/Occ4m/programming/tsl/mst7_transcriptome/analysis)
+
+I’m writing the new analysis entry point into the workspace now so it can be opened and rendered directly from the analysis folder.
+
+Created memory file [](file:///home/Occ4m/.vscode-server/data/User/globalStorage/github.copilot-chat/memory-tool/memories/Occ4m/programming/tsl/mst7_transcriptome/analysis/03_modular_pipeline.Rmd)
+
+I prepared a reusable R Markdown workflow that targets the modular scripts already in dge_functions.R, upset_functions.R, correlation_functions.R, and comparison_table.R. Paste this into a new R Markdown document in the analysis folder and render it.
+
+```r
+---
+title: "Modular RNA-seq pipeline for mst7 transcriptome"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    theme: flatly
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = TRUE, warning = TRUE)
+```
+
+# Overview
+
+This document runs the modular RNA-seq workflow for the mst7 transcriptome project.
+It loads the sample metadata, sources the reusable analysis scripts, runs sleuth-based
+DGE comparisons from the comparison table, generates DEG summary plots, creates upset plots,
+and generates correlation matrices for the requested sample subsets.
+
+```{r libraries, message=FALSE, warning=FALSE}
+library(dplyr)
+library(readr)
+library(purrr)
+library(tidyr)
+library(stringr)
+library(tibble)
+library(here)
+library(ggplot2)
+library(UpSetR)
+library(reshape2)
+```
+
+```{r paths}
+project_dir <- here::here()
+analysis_dir <- file.path(project_dir, "analysis")
+scripts_dir <- file.path(analysis_dir, "scripts")
+results_dir <- file.path(project_dir, "results")
+fig_dir <- file.path(results_dir, "figures")
+tables_dir <- file.path(results_dir, "tables")
+dge_dir <- file.path(results_dir, "dge")
+upset_dir <- file.path(fig_dir, "upset")
+cor_dir <- file.path(fig_dir, "correlation")
+
+for (dir_path in c(fig_dir, tables_dir, dge_dir, upset_dir, cor_dir)) {
+  dir.create(dir_path, recursive = TRUE, showWarnings = FALSE)
+}
+```
+
+```{r source-scripts}
+source(file.path(scripts_dir, "comparison_table.R"))
+source(file.path(scripts_dir, "upset_functions.R"))
+source(file.path(scripts_dir, "correlation_functions.R"))
+source(file.path(scripts_dir, "dge_functions.R"))
+```
+
+```{r metadata}
+s2c <- read_csv(file.path(project_dir, "raw", "run_metadata.txt"),
+                show_col_types = FALSE) %>%
+  mutate(
+    path = file.path(project_dir, "raw", path),
+    name = str_remove(name, "_0h_\\d+$"),
+    sample = paste0(name, "_", timepoint, "_", biorep),
+    name = factor(name),
+    timepoint = factor(timepoint),
+    biorep = factor(biorep)
+  ) %>%
+  mutate(
+    experiment = if_else(name %in% c("pmk1", "Guy11M"), "Exp2", "Exp1"),
+    experiment = factor(experiment, levels = c("Exp1", "Exp2"))
+  )
+```
+
+# Sleuth differential expression
+
+```{r run-dge, message=FALSE, warning=FALSE}
+dge_results <- map_dfr(seq_len(nrow(comparisons)), function(i) {
+  comp <- comparisons[i, , drop = FALSE]
+
+  res_list <- run_comparison(
+    s2c = s2c,
+    comparison_row = comp,
+    out_dir = dge_dir
+  )
+
+  if (length(res_list) == 0 || all(vapply(res_list, is.null, logical(1)))) {
+    return(tibble())
+  }
+
+  bind_rows(res_list, .id = "timepoint") %>%
+    mutate(
+      comparison_label = comp$label,
+      control = comp$control,
+      test = comp$test
+    )
+})
+```
+
+```{r dge-summary-plots}
+plot_dge_summary <- function(dge_table, comparison_label, out_dir = fig_dir) {
+  plot_df <- dge_table %>%
+    filter(comparison_label == !!comparison_label) %>%
+    mutate(
+      direction = if_else(b > 0, "up", "down"),
+      n_plot = if_else(direction == "down", -1, 1)
+    ) %>%
+    count(timepoint, direction, name = "n_deg") %>%
+    mutate(n_plot = if_else(direction == "down", -n_deg, n_deg))
+
+  if (nrow(plot_df) == 0) {
+    return(NULL)
+  }
+
+  p <- ggplot(plot_df, aes(x = n_plot, y = timepoint, fill = direction)) +
+    geom_col(width = 0.7) +
+    geom_vline(xintercept = 0, linewidth = 0.5) +
+    scale_fill_manual(values = c(up = "#D62728", down = "#1F77B4")) +
+    scale_x_continuous(labels = abs) +
+    labs(
+      title = paste("DEG counts:", comparison_label),
+      subtitle = "Sleuth DGE summary",
+      x = "Number of DEGs",
+      y = "Timepoint",
+      fill = NULL
+    ) +
+    theme_classic(base_size = 12)
+
+  out_file <- file.path(out_dir, paste0("dge_summary_", comparison_label, ".png"))
+  ggsave(out_file, p, width = 8, height = 5, dpi = 300)
+  p
+}
+
+for (lab in unique(dge_results$comparison_label)) {
+  if (!is.na(lab) && nzchar(lab)) {
+    plot_dge_summary(dge_results, lab, out_dir = fig_dir)
+  }
+}
+```
+
+# Upset plots
+
+```{r upset-plots}
+deg_sets <- load_deg_tables(
+  comparison_labels = comparisons$label,
+  dge_dir = dge_dir,
+  qval_threshold = 0.05,
+  fc_threshold = 0
+)
+
+plot_upset(deg_sets, label = "all_comparisons", out_dir = upset_dir)
+```
+
+# Correlation matrices
+
+```{r correlation-matrices}
+tpm_matrix <- read_tpm_matrix(file.path(project_dir, "raw", "all_samples_tpm_matrix.txt"))
+
+cor_matrix_all(tpm_matrix, s2c)
+cor_matrix_exp1(tpm_matrix, s2c)
+cor_matrix_exp2(tpm_matrix, s2c)
+cor_matrix_key_strains(tpm_matrix, s2c)
+```
+
+# Session information
+
+```{r session-info}
+sessionInfo()
+```
+```
+
+If you want, I can next help you turn this into a version that also includes a dedicated rank-products section and the mirrored inverse plot for the A vs B and B vs A comparisons.If you want, I can next help you turn this into a version that also includes a dedicated rank-products section and the mirrored inverse plot for the A vs B and B vs A comparisons.
+
 
