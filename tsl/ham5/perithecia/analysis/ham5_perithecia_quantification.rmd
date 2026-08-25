@@ -1,0 +1,27 @@
+```{r message=FALSE, warning=FALSE, echo=FALSE, fig.show='hide'}
+source("analysis/scripts/perithecia_assay.r")
+
+p <- plot_perithecia_boxplots(
+  "raw/Quantification_ham5_perithecia_assay.csv",
+  rename_strains = c(
+    "1.95" = "\u0394ham5 1.95",
+    "27.2" = "\u0394ham5 27.2",
+    "mst7" = "\u0394mst7",
+    "mst11" = "\u0394mst11",
+    "mst50" = "\u0394mst50",
+    "pmk1" = "\u0394pmk1"
+  ),
+  font_size = 8
+)
+
+
+ggsave(
+  filename = "figures/perithecia_boxplot.svg",
+  plot = p,
+  width = 5,
+  height = 3,
+  dpi = 300
+)
+
+
+```
