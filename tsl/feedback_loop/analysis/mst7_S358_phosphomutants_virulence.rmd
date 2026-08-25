@@ -1,0 +1,25 @@
+```{r}
+source("analysis/scripts/spray_infection.R")
+library(here)
+raw_dir <- here("raw")
+raw_file <- "spray_infections.xlsx"
+
+my_order <- c(
+  "Guy11",
+  "Δmst7",
+  "MST7-GFP 9.2",
+  "MST7-GFP 12.2",
+  "MST7S358D-GFP 1.1",
+  "MST7S358D-GFP 3.1",
+  "MST7S358A-GFP 1.3",
+  "MST7S358A-GFP 3.5"
+)
+
+my_reps <- c(1,2,3)   # for example, only biorep 1 and 3
+
+
+plot_genotype_boxplot(
+    file.path(raw_dir, raw_file),
+    genotype_order = my_order,
+    reps = my_reps)
+```
