@@ -1,0 +1,295 @@
+---
+title: "Infection phosphoproteome analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+## Source helper scripts
+
+```{r source-scripts}
+source("analysis/scripts/phosphoproteome_cleanup.r")
+source("analysis/scripts/phosphoproteome_analysis.r")
+```
+
+## File paths
+
+```{r paths}
+pmk1_path <- file.path("raw", "pmk1", "combined_modified_peptide.tsv")
+mst7_path <- file.path("raw", "mst7", "combined_modified_peptide.tsv")
+
+# Helper to detect spectral and MaxLFQ columns from a data frame
+detect_spec_and_lfq <- function(df) {
+  spec_cols <- colnames(df)[stringr::str_detect(colnames(df), regex("Spectral Count", ignore_case = TRUE))]
+  lfq_cols <- colnames(df)[stringr::str_detect(colnames(df), regex("MaxLFQ Intensity", ignore_case = TRUE))]
+  list(spec = spec_cols, lfq = lfq_cols)
+}
+```
+
+## Cleanup datasets
+
+```{r cleanup}
+# Load raw to detect columns
+raw_pmk1 <- load_phospho_data(pmk1_path)
+cols_pmk1 <- detect_spec_and_lfq(raw_pmk1)
+
+raw_mst7 <- load_phospho_data(mst7_path)
+cols_mst7 <- detect_spec_and_lfq(raw_mst7)
+
+# Run full cleanup (phospho_all and phospho_only)
+pmk1_clean <- cleanup_phospho_dataset(pmk1_path, mod_col = "Assigned Modifications")
+mst7_clean <- cleanup_phospho_dataset(mst7_path, mod_col = "Assigned Modifications")
+
+# Expose datasets
+pmk1_phospho_all <- pmk1_clean$phospho_all
+pmk1_phospho_only <- pmk1_clean$phospho_only
+
+mst7_phospho_all <- mst7_clean$phospho_all
+mst7_phospho_only <- mst7_clean$phospho_only
+```
+
+## Summaries and plots (phospho_all)
+
+```{r summaries-phospho-all}
+# Summarise per-sample metrics for phospho_all
+pmk1_summary_all <- summarise_phospho_samples(pmk1_phospho_all, spec_cols = cols_pmk1$spec, lfq_cols = cols_pmk1$lfq)
+mst7_summary_all <- summarise_phospho_samples(mst7_phospho_all, spec_cols = cols_mst7$spec, lfq_cols = cols_mst7$lfq)
+
+# Example plots
+plot_total_spectral_counts(pmk1_summary_all)
+plot_total_maxlfq(pmk1_summary_all)
+plot_total_phospho_peptides(pmk1_summary_all)
+plot_total_phospho_proteins(pmk1_summary_all)
+
+plot_total_spectral_counts(mst7_summary_all)
+plot_total_maxlfq(mst7_summary_all)
+plot_total_phospho_peptides(mst7_summary_all)
+plot_total_phospho_proteins(mst7_summary_all)
+```
+
+```{r save-summaries-phospho-all}
+# Create output folder if it doesn't exist
+if (!dir.exists("results")) dir.create("results")
+
+## ---- Save summaries for phospho_all ----
+
+write.csv(pmk1_summary_all, "results/pmk1_summary_all.csv", row.names = FALSE)
+write.csv(mst7_summary_all, "results/mst7_summary_all.csv", row.names = FALSE)
+
+# PMK1 plots
+ggplot2::ggsave("results/pmk1_total_spectral_counts_all.png",
+                plot_total_spectral_counts(pmk1_summary_all), width = 7, height = 5)
+
+ggplot2::ggsave("results/pmk1_total_maxlfq_all.png",
+                plot_total_maxlfq(pmk1_summary_all), width = 7, height = 5)
+
+ggplot2::ggsave("results/pmk1_total_phospho_peptides_all.png",
+                plot_total_phospho_peptides(pmk1_summary_all), width = 7, height = 5)
+
+ggplot2::ggsave("results/pmk1_total_phospho_proteins_all.png",
+                plot_total_phospho_proteins(pmk1_summary_all), width = 7, height = 5)
+
+# MST7 plots
+ggplot2::ggsave("results/mst7_total_spectral_counts_all.png",
+                plot_total_spectral_counts(mst7_summary_all), width = 7, height = 5)
+
+ggplot2::ggsave("results/mst7_total_maxlfq_all.png",
+                plot_total_maxlfq(mst7_summary_all), width = 7, height = 5)
+
+ggplot2::ggsave("results/mst7_total_phospho_peptides_all.png",
+                plot_total_phospho_peptides(mst7_summary_all), width = 7, height = 5)
+
+ggplot2::ggsave("results/mst7_total_phospho_proteins_all.png",
+                plot_total_phospho_proteins(mst7_summary_all), width = 7, height = 5)
+```
+
+## Summaries and plots (phospho_only)
+
+```{r summaries-phospho-only}
+# Summarise per-sample metrics for phospho_only
+pmk1_summary_only <- summarise_phospho_samples(pmk1_phospho_only, spec_cols = cols_pmk1$spec, lfq_cols = cols_pmk1$lfq)
+mst7_summary_only <- summarise_phospho_samples(mst7_phospho_only, spec_cols = cols_mst7$spec, lfq_cols = cols_mst7$lfq)
+
+# Example plots
+plot_total_spectral_counts(pmk1_summary_only)
+plot_total_maxlfq(pmk1_summary_only)
+plot_total_phospho_peptides(pmk1_summary_only)
+plot_total_phospho_proteins(pmk1_summary_only)
+
+plot_total_spectral_counts(mst7_summary_only)
+plot_total_maxlfq(mst7_summary_only)
+plot_total_phospho_peptides(mst7_summary_only)
+plot_total_phospho_proteins(mst7_summary_only)
+```
+
+```{r save-summaries-phospho-only}
+# Create output folder if it doesn't exist
+if (!dir.exists("results")) dir.create("results")
+
+## ---- Save summaries for phospho_only ----
+
+write.csv(pmk1_summary_only, "results/pmk1_summary_only.csv", row.names = FALSE)
+write.csv(mst7_summary_only, "results/mst7_summary_only.csv", row.names = FALSE)
+
+# PMK1 plots
+ggplot2::ggsave("results/pmk1_total_spectral_counts_only.png",
+                plot_total_spectral_counts(pmk1_summary_only), width = 7, height = 5)
+
+ggplot2::ggsave("results/pmk1_total_maxlfq_only.png",
+                plot_total_maxlfq(pmk1_summary_only), width = 7, height = 5)
+
+ggplot2::ggsave("results/pmk1_total_phospho_peptides_only.png",
+                plot_total_phospho_peptides(pmk1_summary_only), width = 7, height = 5)
+
+ggplot2::ggsave("results/pmk1_total_phospho_proteins_only.png",
+                plot_total_phospho_proteins(pmk1_summary_only), width = 7, height = 5)
+
+# MST7 plots
+ggplot2::ggsave("results/mst7_total_spectral_counts_only.png",
+                plot_total_spectral_counts(mst7_summary_only), width = 7, height = 5)
+
+ggplot2::ggsave("results/mst7_total_maxlfq_only.png",
+                plot_total_maxlfq(mst7_summary_only), width = 7, height = 5)
+
+ggplot2::ggsave("results/mst7_total_phospho_peptides_only.png",
+                plot_total_phospho_peptides(mst7_summary_only), width = 7, height = 5)
+
+ggplot2::ggsave("results/mst7_total_phospho_proteins_only.png",
+                plot_total_phospho_proteins(mst7_summary_only), width = 7, height = 5)
+```
+
+## Save cleaned data frames
+
+```{r save-cleaned-dfs}
+# Create output folder if it doesn't exist
+if (!dir.exists("results")) dir.create("results")
+
+# PMK1
+write.csv(pmk1_phospho_all,  "results/pmk1_phospho_all.csv",  row.names = FALSE)
+write.csv(pmk1_phospho_only, "results/pmk1_phospho_only.csv", row.names = FALSE)
+
+# MST7
+write.csv(mst7_phospho_all,  "results/mst7_phospho_all.csv",  row.names = FALSE)
+write.csv(mst7_phospho_only, "results/mst7_phospho_only.csv", row.names = FALSE)
+```
+
+## Venn analyses
+
+```{r venn-sets}
+# A feature is detected when at least one sample for that strain has a count > 0.
+features_for_strain <- function(df, spec_cols, strain, id_col) {
+  strain_cols <- spec_cols[stringr::str_detect(
+    tolower(spec_cols), paste0("^", stringr::fixed(tolower(strain)), "_")
+  )]
+  if (length(strain_cols) == 0) stop("No spectral-count columns found for ", strain)
+
+  df %>%
+    filter(rowSums(across(all_of(strain_cols), ~ replace_na(as.numeric(.x), 0))) > 0) %>%
+    pull(all_of(id_col)) %>%
+    as.character() %>%
+    na.omit() %>%
+    unique()
+}
+
+make_comparison <- function(df_a, spec_a, strain_a, df_b, spec_b, strain_b,
+                            label_a = strain_a, label_b = strain_b) {
+  setNames(list(
+    peptides = setNames(list(
+      features_for_strain(df_a, spec_a, strain_a, "Peptide Sequence"),
+      features_for_strain(df_b, spec_b, strain_b, "Peptide Sequence")
+    ), c(label_a, label_b)),
+    proteins = setNames(list(
+      features_for_strain(df_a, spec_a, strain_a, "Protein ID"),
+      features_for_strain(df_b, spec_b, strain_b, "Protein ID")
+    ), c(label_a, label_b))
+  ), c("peptides", "proteins"))
+}
+
+# Within-experiment comparisons.
+venn_pmk1 <- make_comparison(pmk1_phospho_all, cols_pmk1$spec, "guy11",
+                             pmk1_phospho_all, cols_pmk1$spec, "pmk1")
+venn_mst7 <- make_comparison(mst7_phospho_all, cols_mst7$spec, "guy11",
+                             mst7_phospho_all, cols_mst7$spec, "mst7")
+
+# Between-experiment comparisons, using all samples for each named strain.
+venn_guy11 <- make_comparison(pmk1_phospho_all, cols_pmk1$spec, "guy11",
+                              mst7_phospho_all, cols_mst7$spec, "guy11",
+                              "Guy11 PMK1", "Guy11 MST7")
+venn_mutants <- make_comparison(pmk1_phospho_all, cols_pmk1$spec, "pmk1",
+                                mst7_phospho_all, cols_mst7$spec, "mst7")
+```
+```
+
+## Plot proportional Venn diagrams
+
+```{r plot-venns}
+library(VennDiagram)
+
+plot_comparison <- function(comparison, entity, title) {
+  sets <- comparison[[entity]]
+  counts <- c(length(sets[[1]]), length(sets[[2]]),
+              length(intersect(sets[[1]], sets[[2]])))
+  VennDiagram::draw.pairwise.venn(
+    area1 = counts[[1]], area2 = counts[[2]], cross.area = counts[[3]],
+    category = names(sets), scaled = TRUE, euler.d = TRUE,
+    fill = c("#2F6690", "#F28E2B"), alpha = c(0.55, 0.55),
+    cex = 1.1, cat.cex = 1.1, ind = FALSE
+  )
+  grid::grid.draw(grid::textGrob(
+    title, y = grid::unit(0.98, "npc"),
+    just = c("center", "top"),
+    gp = grid::gpar(fontface = "bold", cex = 1.1)
+  ))
+  invisible(NULL)
+}
+
+plot_comparison(venn_pmk1, "peptides", "PMK1 experiment: peptides")
+plot_comparison(venn_pmk1, "proteins", "PMK1 experiment: phosphoproteins")
+plot_comparison(venn_mst7, "peptides", "MST7 experiment: peptides")
+plot_comparison(venn_mst7, "proteins", "MST7 experiment: phosphoproteins")
+plot_comparison(venn_guy11, "peptides", "Guy11 across experiments: peptides")
+plot_comparison(venn_guy11, "proteins", "Guy11 across experiments: phosphoproteins")
+plot_comparison(venn_mutants, "peptides", "PMK1 vs MST7: peptides")
+plot_comparison(venn_mutants, "proteins", "PMK1 vs MST7: phosphoproteins")
+```
+
+## Save Venn diagrams as PNG files
+
+```{r save-venns}
+venn_plots <- list(
+  pmk1_peptides = list(comparison = venn_pmk1, entity = "peptides",
+                       title = "PMK1 experiment: peptides"),
+  pmk1_phosphoproteins = list(comparison = venn_pmk1, entity = "proteins",
+                              title = "PMK1 experiment: phosphoproteins"),
+  mst7_peptides = list(comparison = venn_mst7, entity = "peptides",
+                       title = "MST7 experiment: peptides"),
+  mst7_phosphoproteins = list(comparison = venn_mst7, entity = "proteins",
+                              title = "MST7 experiment: phosphoproteins"),
+  guy11_peptides = list(comparison = venn_guy11, entity = "peptides",
+                        title = "Guy11 across experiments: peptides"),
+  guy11_phosphoproteins = list(comparison = venn_guy11, entity = "proteins",
+                               title = "Guy11 across experiments: phosphoproteins"),
+  mutants_peptides = list(comparison = venn_mutants, entity = "peptides",
+                          title = "PMK1 vs MST7: peptides"),
+  mutants_phosphoproteins = list(comparison = venn_mutants, entity = "proteins",
+                                title = "PMK1 vs MST7: phosphoproteins")
+)
+
+for (plot_name in names(venn_plots)) {
+  plot_spec <- venn_plots[[plot_name]]
+  grDevices::png(
+    filename = file.path("results", paste0("venn_", plot_name, ".png")),
+    width = 7, height = 6, units = "in", res = 300
+  )
+  plot_comparison(plot_spec$comparison, plot_spec$entity, plot_spec$title)
+  grDevices::dev.off()
+}
+```
+
+
+## Notes
+
+- The functions assume the column names contain the strings `Spectral Count` and `MaxLFQ Intensity` to detect sample columns. Adjust detection if your TSV differs.
+
