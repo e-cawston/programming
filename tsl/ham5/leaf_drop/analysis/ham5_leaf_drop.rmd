@@ -1,0 +1,28 @@
+```{r}
+source("analysis/scripts/leaf_drop.r")
+
+results <-analyse_leafdrop(
+    "raw", 
+    annotate = "none",
+    rename_strains = c(
+        "Guy11" = "Guy11",
+        "ham5_1.95" = "Δham5_1.95",
+        "ham5_27.2" = "Δham5_27.2"
+    ),
+    base_size=8,
+)
+results$plot
+```
+
+```{r}
+ggplot2::ggsave(
+  filename = "figures/ham5_leafdrop_lesion_area_plot.svg",
+  plot = results$plot,
+  width = 2.5,
+  height = 2,
+  dpi = 300
+)
+
+```
+
+
