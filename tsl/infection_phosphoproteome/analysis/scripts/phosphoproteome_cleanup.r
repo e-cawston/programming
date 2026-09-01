@@ -78,9 +78,57 @@ filter_phospho_peptides_only <- function(df, mod_col = "Assigned Modifications",
     )
 }
 
+# Keep rows detected in at least min_bioreps for one timepoint.
+filter_min_biorep_intensity <- function(df, intensity_cols = NULL, min_bioreps = 2) {
+  if (length(min_bioreps) != 1 || !is.numeric(min_bioreps) || min_bioreps < 1) {
+    stop("min_bioreps must be a positive number")
+  }
+
+  if (is.null(intensity_cols)) {
+    intensity_cols <- colnames(df)[
+      stringr::str_detect(colnames(df), " Intensity$") &
+        !stringr::str_detect(colnames(df), " MaxLFQ Intensity$")
+    ]
+  } else {
+    missing_cols <- setdiff(intensity_cols, colnames(df))
+    if (length(missing_cols) > 0) {
+      stop("Intensity columns not found: ", paste(missing_cols, collapse = ", "))
+    }
+  }
+
+  if (length(intensity_cols) == 0) {
+    stop("No intensity columns found")
+  }
+
+  sample_names <- stringr::str_remove(intensity_cols, " Intensity$")
+  sample_parts <- stringr::str_match(sample_names, "^(.+)_([0-9]+)$")
+  if (any(is.na(sample_parts[, 3]))) {
+    stop("Intensity columns must end with a numeric biorep suffix: ",
+         paste(intensity_cols[is.na(sample_parts[, 3])], collapse = ", "))
+  }
+
+  timepoint_groups <- split(seq_along(intensity_cols), sample_parts[, 2])
+  intensity_values <- vapply(
+    df[intensity_cols],
+    function(values) as.numeric(values),
+    numeric(nrow(df))
+  )
+
+  measured_bioreps <- vapply(
+    timepoint_groups,
+    function(indices) {
+      rowSums(intensity_values[, indices, drop = FALSE] > 0, na.rm = TRUE)
+    },
+    numeric(nrow(df))
+  )
+
+  df[apply(measured_bioreps, 1, max) >= min_bioreps, , drop = FALSE]
+}
+
 # Full cleanup wrapper
 cleanup_phospho_dataset <- function(path, mod_col = "Assigned Modifications",
-                                    mass_shift = 79.9663, tolerance = 0) {
+                                    mass_shift = 79.9663, tolerance = 0,
+                                    intensity_cols = NULL, min_bioreps = 2) {
 
   df <- load_phospho_data(path)
 
@@ -92,7 +140,20 @@ cleanup_phospho_dataset <- function(path, mod_col = "Assigned Modifications",
     df, mod_col = mod_col, mass_shift = mass_shift, tolerance = tolerance
   )
 
-  list(raw = df, phospho_all = phospho_all, phospho_only = phospho_only)
+  phospho_all_biorep_filtered <- filter_min_biorep_intensity(
+    phospho_all, intensity_cols = intensity_cols, min_bioreps = min_bioreps
+  )
+  phospho_only_biorep_filtered <- filter_min_biorep_intensity(
+    phospho_only, intensity_cols = intensity_cols, min_bioreps = min_bioreps
+  )
+
+  list(
+    raw = df,
+    phospho_all = phospho_all,
+    phospho_only = phospho_only,
+    phospho_all_biorep_filtered = phospho_all_biorep_filtered,
+    phospho_only_biorep_filtered = phospho_only_biorep_filtered
+  )
 }
 
 

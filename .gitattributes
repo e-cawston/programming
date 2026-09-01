@@ -2,3 +2,5 @@
 * text=auto
 /tsl/infection_phosphoproteome/results/mst7_phospho_all.csv filter=lfs diff=lfs merge=lfs -text
 /tsl/infection_phosphoproteome/results/mst7_phospho_only.csv filter=lfs diff=lfs merge=lfs -text
+/tsl/infection_phosphoproteome/results/guy11_between_experiments_long.csv filter=lfs diff=lfs merge=lfs -text
+/tsl/infection_phosphoproteome/results/guy11_between_experiments_long_imputed.csv filter=lfs diff=lfs merge=lfs -text

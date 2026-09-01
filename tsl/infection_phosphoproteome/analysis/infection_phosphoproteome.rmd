@@ -12,6 +12,8 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```{r source-scripts}
 source("analysis/scripts/phosphoproteome_cleanup.r")
 source("analysis/scripts/phosphoproteome_analysis.r")
+source("analysis/scripts/phosphoproteome_vsn_imputation.r")
+source("analysis/scripts/phosphoproteome_diffexp_bootstrap.r")
 ```
 
 ## File paths
@@ -24,156 +26,236 @@ mst7_path <- file.path("raw", "mst7", "combined_modified_peptide.tsv")
 detect_spec_and_lfq <- function(df) {
   spec_cols <- colnames(df)[stringr::str_detect(colnames(df), regex("Spectral Count", ignore_case = TRUE))]
   lfq_cols <- colnames(df)[stringr::str_detect(colnames(df), regex("MaxLFQ Intensity", ignore_case = TRUE))]
-  list(spec = spec_cols, lfq = lfq_cols)
+  intensity_cols <- colnames(df)[
+    stringr::str_detect(colnames(df), regex(" Intensity$", ignore_case = TRUE)) &
+      !stringr::str_detect(colnames(df), regex(" MaxLFQ Intensity$", ignore_case = TRUE))
+  ]
+  list(spec = spec_cols, lfq = lfq_cols, intensity = intensity_cols)
 }
 ```
 
 ## Cleanup datasets
 
-```{r cleanup}
-# Load raw to detect columns
+```{r cleanup pmk1}
+dir.create("results", showWarnings = FALSE, recursive = TRUE)
+
 raw_pmk1 <- load_phospho_data(pmk1_path)
 cols_pmk1 <- detect_spec_and_lfq(raw_pmk1)
 
+pmk1_clean <- cleanup_phospho_dataset(pmk1_path, mod_col = "Assigned Modifications")
+
+
+pmk1_phospho_all_unfiltered <- pmk1_clean$phospho_all
+pmk1_phospho_only_unfiltered <- pmk1_clean$phospho_only
+pmk1_phospho_all <- pmk1_clean$phospho_all_biorep_filtered
+
+
+
+
+
+writexl::write_xlsx(raw_pmk1, "results/pmk1_00_raw.xlsx")
+writexl::write_xlsx(pmk1_phospho_all_unfiltered, "results/pmk1_01_phospho_all.xlsx")
+writexl::write_xlsx(pmk1_phospho_only_unfiltered, "results/pmk1_02_phospho_only.xlsx")
+writexl::write_xlsx(pmk1_phospho_all, "results/pmk1_03_phospho_all_min_2_bioreps.xlsx")
+```
+
+```{r cleanup mst7}
+dir.create("results", showWarnings = FALSE, recursive = TRUE)
+
 raw_mst7 <- load_phospho_data(mst7_path)
 cols_mst7 <- detect_spec_and_lfq(raw_mst7)
-
-# Run full cleanup (phospho_all and phospho_only)
-pmk1_clean <- cleanup_phospho_dataset(pmk1_path, mod_col = "Assigned Modifications")
 mst7_clean <- cleanup_phospho_dataset(mst7_path, mod_col = "Assigned Modifications")
 
-# Expose datasets
-pmk1_phospho_all <- pmk1_clean$phospho_all
-pmk1_phospho_only <- pmk1_clean$phospho_only
 
-mst7_phospho_all <- mst7_clean$phospho_all
-mst7_phospho_only <- mst7_clean$phospho_only
+mst7_phospho_all_unfiltered <- mst7_clean$phospho_all
+mst7_phospho_only_unfiltered <- mst7_clean$phospho_only
+mst7_phospho_all <- mst7_clean$phospho_all_biorep_filtered
+
+
+writexl::write_xlsx(raw_mst7, "results/mst7_00_raw.xlsx")
+writexl::write_xlsx(mst7_phospho_all_unfiltered, "results/mst7_01_phospho_all.xlsx")
+writexl::write_xlsx(mst7_phospho_only_unfiltered, "results/mst7_02_phospho_only.xlsx")
+writexl::write_xlsx(mst7_phospho_all, "results/mst7_03_phospho_all_min_2_bioreps.xlsx")
+
 ```
 
-## Summaries and plots (phospho_all)
+## VSN normalisation and imputation
 
-```{r summaries-phospho-all}
-# Summarise per-sample metrics for phospho_all
-pmk1_summary_all <- summarise_phospho_samples(pmk1_phospho_all, spec_cols = cols_pmk1$spec, lfq_cols = cols_pmk1$lfq)
-mst7_summary_all <- summarise_phospho_samples(mst7_phospho_all, spec_cols = cols_mst7$spec, lfq_cols = cols_mst7$lfq)
-
-# Example plots
-plot_total_spectral_counts(pmk1_summary_all)
-plot_total_maxlfq(pmk1_summary_all)
-plot_total_phospho_peptides(pmk1_summary_all)
-plot_total_phospho_proteins(pmk1_summary_all)
-
-plot_total_spectral_counts(mst7_summary_all)
-plot_total_maxlfq(mst7_summary_all)
-plot_total_phospho_peptides(mst7_summary_all)
-plot_total_phospho_proteins(mst7_summary_all)
+```{r vsn-imputation-pmk1}
+pmk1_vsn <- process_vsn_imputation(
+  "results/pmk1_03_phospho_all_min_2_bioreps.xlsx", "pmk1"
+)
 ```
 
-```{r save-summaries-phospho-all}
-# Create output folder if it doesn't exist
-if (!dir.exists("results")) dir.create("results")
-
-## ---- Save summaries for phospho_all ----
-
-write.csv(pmk1_summary_all, "results/pmk1_summary_all.csv", row.names = FALSE)
-write.csv(mst7_summary_all, "results/mst7_summary_all.csv", row.names = FALSE)
-
-# PMK1 plots
-ggplot2::ggsave("results/pmk1_total_spectral_counts_all.png",
-                plot_total_spectral_counts(pmk1_summary_all), width = 7, height = 5)
-
-ggplot2::ggsave("results/pmk1_total_maxlfq_all.png",
-                plot_total_maxlfq(pmk1_summary_all), width = 7, height = 5)
-
-ggplot2::ggsave("results/pmk1_total_phospho_peptides_all.png",
-                plot_total_phospho_peptides(pmk1_summary_all), width = 7, height = 5)
-
-ggplot2::ggsave("results/pmk1_total_phospho_proteins_all.png",
-                plot_total_phospho_proteins(pmk1_summary_all), width = 7, height = 5)
-
-# MST7 plots
-ggplot2::ggsave("results/mst7_total_spectral_counts_all.png",
-                plot_total_spectral_counts(mst7_summary_all), width = 7, height = 5)
-
-ggplot2::ggsave("results/mst7_total_maxlfq_all.png",
-                plot_total_maxlfq(mst7_summary_all), width = 7, height = 5)
-
-ggplot2::ggsave("results/mst7_total_phospho_peptides_all.png",
-                plot_total_phospho_peptides(mst7_summary_all), width = 7, height = 5)
-
-ggplot2::ggsave("results/mst7_total_phospho_proteins_all.png",
-                plot_total_phospho_proteins(mst7_summary_all), width = 7, height = 5)
+```{r vsn-imputation-mst7}
+mst7_vsn <- process_vsn_imputation(
+  "results/mst7_03_phospho_all_min_2_bioreps.xlsx", "mst7"
+)
 ```
 
-## Summaries and plots (phospho_only)
+## Reload saved processing stages
 
-```{r summaries-phospho-only}
-# Summarise per-sample metrics for phospho_only
-pmk1_summary_only <- summarise_phospho_samples(pmk1_phospho_only, spec_cols = cols_pmk1$spec, lfq_cols = cols_pmk1$lfq)
-mst7_summary_only <- summarise_phospho_samples(mst7_phospho_only, spec_cols = cols_mst7$spec, lfq_cols = cols_mst7$lfq)
+```{r reload-processing-stages}
+pmk1_filtered <- readxl::read_xlsx("results/pmk1_03_phospho_all_min_2_bioreps.xlsx")
+pmk1_vsn_normalized <- readxl::read_xlsx("results/pmk1_05_vsn_normalized_nonimputed.xlsx")
+pmk1_imputed <- readxl::read_xlsx("results/pmk1_05_vsn_mar_mnar_imputed.xlsx")
 
-# Example plots
-plot_total_spectral_counts(pmk1_summary_only)
-plot_total_maxlfq(pmk1_summary_only)
-plot_total_phospho_peptides(pmk1_summary_only)
-plot_total_phospho_proteins(pmk1_summary_only)
+mst7_filtered <- readxl::read_xlsx("results/mst7_03_phospho_all_min_2_bioreps.xlsx")
+mst7_vsn_normalized <- readxl::read_xlsx("results/mst7_05_vsn_normalized_nonimputed.xlsx")
+mst7_imputed <- readxl::read_xlsx("results/mst7_05_vsn_mar_mnar_imputed.xlsx")
 
-plot_total_spectral_counts(mst7_summary_only)
-plot_total_maxlfq(mst7_summary_only)
-plot_total_phospho_peptides(mst7_summary_only)
-plot_total_phospho_proteins(mst7_summary_only)
+pmk1_sample_cols <- stringr::str_remove(
+  cols_pmk1$intensity, " Intensity$"
+)
+mst7_sample_cols <- stringr::str_remove(
+  cols_mst7$intensity, " Intensity$"
+)
 ```
 
-```{r save-summaries-phospho-only}
-# Create output folder if it doesn't exist
-if (!dir.exists("results")) dir.create("results")
+## Summaries and plots (all processing stages)
 
-## ---- Save summaries for phospho_only ----
+```{r summaries-all-stages}
+pmk1_summary_filtered <- summarise_phospho_stage(
+  pmk1_filtered, "pmk1", "filtered",
+  spec_cols = cols_pmk1$spec, lfq_cols = cols_pmk1$lfq,
+  intensity_cols = cols_pmk1$intensity
+)
+pmk1_summary_normalized <- summarise_phospho_stage(
+  pmk1_vsn_normalized, "pmk1", "normalized",
+  intensity_cols = pmk1_sample_cols
+)
+pmk1_summary_imputed <- summarise_phospho_stage(
+  pmk1_imputed, "pmk1", "imputed",
+  intensity_cols = pmk1_sample_cols
+)
 
-write.csv(pmk1_summary_only, "results/pmk1_summary_only.csv", row.names = FALSE)
-write.csv(mst7_summary_only, "results/mst7_summary_only.csv", row.names = FALSE)
+mst7_summary_filtered <- summarise_phospho_stage(
+  mst7_filtered, "mst7", "filtered",
+  spec_cols = cols_mst7$spec, lfq_cols = cols_mst7$lfq,
+  intensity_cols = cols_mst7$intensity
+)
+mst7_summary_normalized <- summarise_phospho_stage(
+  mst7_vsn_normalized, "mst7", "normalized",
+  intensity_cols = mst7_sample_cols
+)
+mst7_summary_imputed <- summarise_phospho_stage(
+  mst7_imputed, "mst7", "imputed",
+  intensity_cols = mst7_sample_cols
+)
 
-# PMK1 plots
-ggplot2::ggsave("results/pmk1_total_spectral_counts_only.png",
-                plot_total_spectral_counts(pmk1_summary_only), width = 7, height = 5)
+summary_all_stages <- dplyr::bind_rows(
+  pmk1_summary_filtered, pmk1_summary_normalized, pmk1_summary_imputed,
+  mst7_summary_filtered, mst7_summary_normalized, mst7_summary_imputed
+)
 
-ggplot2::ggsave("results/pmk1_total_maxlfq_only.png",
-                plot_total_maxlfq(pmk1_summary_only), width = 7, height = 5)
-
-ggplot2::ggsave("results/pmk1_total_phospho_peptides_only.png",
-                plot_total_phospho_peptides(pmk1_summary_only), width = 7, height = 5)
-
-ggplot2::ggsave("results/pmk1_total_phospho_proteins_only.png",
-                plot_total_phospho_proteins(pmk1_summary_only), width = 7, height = 5)
-
-# MST7 plots
-ggplot2::ggsave("results/mst7_total_spectral_counts_only.png",
-                plot_total_spectral_counts(mst7_summary_only), width = 7, height = 5)
-
-ggplot2::ggsave("results/mst7_total_maxlfq_only.png",
-                plot_total_maxlfq(mst7_summary_only), width = 7, height = 5)
-
-ggplot2::ggsave("results/mst7_total_phospho_peptides_only.png",
-                plot_total_phospho_peptides(mst7_summary_only), width = 7, height = 5)
-
-ggplot2::ggsave("results/mst7_total_phospho_proteins_only.png",
-                plot_total_phospho_proteins(mst7_summary_only), width = 7, height = 5)
+write.csv(summary_all_stages,
+          "results/summary_phospho_all_stages.csv", row.names = FALSE)
+ggplot2::ggsave("results/summary_total_spectral_counts_by_stage.png",
+                plot_stage_spectral_counts(summary_all_stages), width = 12, height = 7)
+ggplot2::ggsave("results/summary_total_maxlfq_by_stage.png",
+                plot_stage_maxlfq(summary_all_stages), width = 12, height = 7)
+ggplot2::ggsave("results/summary_total_intensity_by_stage.png",
+                plot_stage_intensity(summary_all_stages), width = 12, height = 7)
+ggplot2::ggsave("results/summary_phospho_peptides_by_stage.png",
+                plot_stage_phospho_peptides(summary_all_stages), width = 12, height = 7)
+ggplot2::ggsave("results/summary_phospho_proteins_by_stage.png",
+                plot_stage_phospho_proteins(summary_all_stages), width = 12, height = 7)
 ```
 
-## Save cleaned data frames
+## Peptide intensity distribution by sample (before vs after VSN/imputation)
 
-```{r save-cleaned-dfs}
-# Create output folder if it doesn't exist
-if (!dir.exists("results")) dir.create("results")
+One boxplot per processing stage and experiment: x-axis is sample (same
+sample order/layout as the other per-sample QC plots above), y-axis is
+intensity, and each point is one peptide's intensity in that sample. The
+filtered stage is on the raw intensity scale (zeros, i.e. "not observed",
+are dropped, and the axis is log10 since raw intensities span several
+orders of magnitude even within a single sample); the normalized/imputed
+stages are on the VSN scale (already roughly log-transformed, so plotted
+linearly), where all values -- including zero or negative -- are kept.
 
-# PMK1
-write.csv(pmk1_phospho_all,  "results/pmk1_phospho_all.csv",  row.names = FALSE)
-write.csv(pmk1_phospho_only, "results/pmk1_phospho_only.csv", row.names = FALSE)
+```{r intensity-boxplots-by-sample}
+intensity_boxplot_specs <- list(
+  list(experiment = "pmk1", stage = "filtered",
+       df = pmk1_filtered, intensity_cols = cols_pmk1$intensity,
+       intensity_suffix = " Intensity", drop_nonpositive = TRUE,
+       y_label = "Intensity (log10 scale)"),
+  list(experiment = "pmk1", stage = "normalized",
+       df = pmk1_vsn_normalized, intensity_cols = pmk1_sample_cols,
+       intensity_suffix = "", drop_nonpositive = FALSE,
+       y_label = "VSN-normalized intensity"),
+  list(experiment = "pmk1", stage = "imputed",
+       df = pmk1_imputed, intensity_cols = pmk1_sample_cols,
+       intensity_suffix = "", drop_nonpositive = FALSE,
+       y_label = "VSN-normalized, imputed intensity"),
+  list(experiment = "mst7", stage = "filtered",
+       df = mst7_filtered, intensity_cols = cols_mst7$intensity,
+       intensity_suffix = " Intensity", drop_nonpositive = TRUE,
+       y_label = "Intensity (log10 scale)"),
+  list(experiment = "mst7", stage = "normalized",
+       df = mst7_vsn_normalized, intensity_cols = mst7_sample_cols,
+       intensity_suffix = "", drop_nonpositive = FALSE,
+       y_label = "VSN-normalized intensity"),
+  list(experiment = "mst7", stage = "imputed",
+       df = mst7_imputed, intensity_cols = mst7_sample_cols,
+       intensity_suffix = "", drop_nonpositive = FALSE,
+       y_label = "VSN-normalized, imputed intensity")
+)
 
-# MST7
-write.csv(mst7_phospho_all,  "results/mst7_phospho_all.csv",  row.names = FALSE)
-write.csv(mst7_phospho_only, "results/mst7_phospho_only.csv", row.names = FALSE)
+for (spec in intensity_boxplot_specs) {
+  plot_title <- paste0(
+    toupper(spec$experiment), " experiment (", spec$stage,
+    "): peptide intensity by sample"
+  )
+  p <- plot_intensity_boxplot_by_sample(
+    spec$df, spec$intensity_cols,
+    intensity_suffix = spec$intensity_suffix,
+    drop_nonpositive = spec$drop_nonpositive,
+    title = plot_title, y_label = spec$y_label
+  )
+  print(p)
+  ggplot2::ggsave(
+    file.path("results", paste0(spec$experiment, "_", spec$stage,
+                                "_intensity_boxplot_by_sample.png")),
+    p, width = 14, height = 6
+  )
+}
 ```
+
+## Phospho-only comparison summary
+
+```{r phospho-only-summary}
+pmk1_only <- readxl::read_xlsx(
+  "results/pmk1_04_phospho_only_min_2_bioreps.xlsx"
+)
+mst7_only <- readxl::read_xlsx(
+  "results/mst7_04_phospho_only_min_2_bioreps.xlsx"
+)
+
+pmk1_summary_only <- summarise_phospho_stage(
+  pmk1_only, "pmk1", "phospho_only",
+  spec_cols = cols_pmk1$spec, lfq_cols = cols_pmk1$lfq,
+  intensity_cols = cols_pmk1$intensity
+)
+mst7_summary_only <- summarise_phospho_stage(
+  mst7_only, "mst7", "phospho_only",
+  spec_cols = cols_mst7$spec, lfq_cols = cols_mst7$lfq,
+  intensity_cols = cols_mst7$intensity
+)
+
+summary_comparison <- dplyr::bind_rows(
+  summary_all_stages, pmk1_summary_only, mst7_summary_only
+)
+overall_summary_comparison <- overall_phospho_summary(summary_comparison)
+
+write.csv(pmk1_summary_only, "results/pmk1_summary_phospho_only.csv", row.names = FALSE)
+write.csv(mst7_summary_only, "results/mst7_summary_phospho_only.csv", row.names = FALSE)
+write.csv(overall_summary_comparison,
+          "results/overall_summary_comparison.csv", row.names = FALSE)
+writexl::write_xlsx(overall_summary_comparison,
+                    "results/overall_summary_comparison.xlsx")
+```
+
+
 
 ## Venn analyses
 
@@ -219,6 +301,34 @@ venn_guy11 <- make_comparison(pmk1_phospho_all, cols_pmk1$spec, "guy11",
                               "Guy11 PMK1", "Guy11 MST7")
 venn_mutants <- make_comparison(pmk1_phospho_all, cols_pmk1$spec, "pmk1",
                                 mst7_phospho_all, cols_mst7$spec, "mst7")
+
+# Restrict the mutant comparison to features detected in both Guy11 datasets.
+guy11_shared <- list(
+  peptides = intersect(venn_guy11$peptides[[1]], venn_guy11$peptides[[2]]),
+  proteins = intersect(venn_guy11$proteins[[1]], venn_guy11$proteins[[2]])
+)
+
+venn_mutants_guy11_shared <- make_comparison(
+  mst7_phospho_all %>%
+    filter(as.character(.data[["Peptide Sequence"]]) %in% guy11_shared$peptides),
+  cols_mst7$spec, "mst7",
+  pmk1_phospho_all %>%
+    filter(as.character(.data[["Peptide Sequence"]]) %in% guy11_shared$peptides),
+  cols_pmk1$spec, "pmk1", "MST7", "PMK1"
+)
+
+venn_mutants_guy11_shared$proteins <- setNames(list(
+  features_for_strain(
+    mst7_phospho_all %>%
+      filter(as.character(.data[["Protein ID"]]) %in% guy11_shared$proteins),
+    cols_mst7$spec, "mst7", "Protein ID"
+  ),
+  features_for_strain(
+    pmk1_phospho_all %>%
+      filter(as.character(.data[["Protein ID"]]) %in% guy11_shared$proteins),
+    cols_pmk1$spec, "pmk1", "Protein ID"
+  )
+), c("MST7", "PMK1"))
 ```
 ```
 
@@ -253,6 +363,10 @@ plot_comparison(venn_guy11, "peptides", "Guy11 across experiments: peptides")
 plot_comparison(venn_guy11, "proteins", "Guy11 across experiments: phosphoproteins")
 plot_comparison(venn_mutants, "peptides", "PMK1 vs MST7: peptides")
 plot_comparison(venn_mutants, "proteins", "PMK1 vs MST7: phosphoproteins")
+plot_comparison(venn_mutants_guy11_shared, "peptides",
+                "MST7 vs PMK1 among Guy11-shared peptides")
+plot_comparison(venn_mutants_guy11_shared, "proteins",
+                "MST7 vs PMK1 among Guy11-shared phosphoproteins")
 ```
 
 ## Save Venn diagrams as PNG files
@@ -275,6 +389,14 @@ venn_plots <- list(
                           title = "PMK1 vs MST7: peptides"),
   mutants_phosphoproteins = list(comparison = venn_mutants, entity = "proteins",
                                 title = "PMK1 vs MST7: phosphoproteins")
+  ,mutants_guy11_shared_peptides = list(
+    comparison = venn_mutants_guy11_shared, entity = "peptides",
+    title = "MST7 vs PMK1 among Guy11-shared peptides"
+  )
+  ,mutants_guy11_shared_phosphoproteins = list(
+    comparison = venn_mutants_guy11_shared, entity = "proteins",
+    title = "MST7 vs PMK1 among Guy11-shared phosphoproteins"
+  )
 )
 
 for (plot_name in names(venn_plots)) {
@@ -286,6 +408,71 @@ for (plot_name in names(venn_plots)) {
   plot_comparison(plot_spec$comparison, plot_spec$entity, plot_spec$title)
   grDevices::dev.off()
 }
+```
+
+
+## Guy11 vs Guy11 between experiments (pepdiff bootstrap-t)
+
+Guy11 (wild type) was run as the shared control genotype in both the mst7
+experiment and the pmk1 experiment -- two separate MS submissions/batches.
+Comparing Guy11-in-mst7-experiment against Guy11-in-pmk1-experiment at each
+timepoint tests for batch effects / reproducibility between the two
+"control" datasets, using
+[pepdiff](https://github.com/TeamMacLean/pepdiff)'s bootstrap-t test with
+10,000 iterations.
+
+This uses VSN-normalized, non-imputed intensities (imputed values are
+fabricated fill-ins and would bias a t-test's variance estimate), and
+`Modified Sequence` as the peptide/site identifier (`Peptide Sequence`
+alone is not unique per row -- see the script header for details).
+`pepdiff::compare()` hardcodes `n_boot = 1000` and doesn't expose it, so
+this calls `pepdiff::test_bootstrap_t()` directly per peptide per
+timepoint; see `analysis/scripts/phosphoproteome_diffexp_bootstrap.r` for
+the full rationale.
+
+**This is a multi-hour computation** (~16,000 shared phosphosites x 6
+timepoints x 10,000 bootstrap iterations each). It is not intended to be
+re-run live inside an interactive knit -- run it once via `Rscript`
+(results are checkpointed per timepoint in `results/guy11_bootstrap_checkpoints/`
+so an interrupted run can resume) and just reload the saved results here.
+
+```{r guy11-bootstrap-diffexp, eval=FALSE}
+guy11_long_data <- build_guy11_between_experiments_data(
+  path_a = "results/mst7_05_vsn_normalized_nonimputed.xlsx",
+  path_b = "results/pmk1_05_vsn_normalized_nonimputed.xlsx",
+  experiment_a = "mst7",
+  experiment_b = "pmk1"
+)
+
+guy11_pepdiff_data <- prepare_pepdiff_data(
+  guy11_long_data,
+  csv_path = "results/guy11_between_experiments_long.csv"
+)
+
+guy11_diffexp <- run_guy11_bootstrap_diffexp(
+  guy11_pepdiff_data,
+  compare = "experiment", ref = "mst7", within = "timepoint",
+  n_boot = 10000, seed = 1,
+  checkpoint_dir = "results/guy11_bootstrap_checkpoints"
+)
+
+writexl::write_xlsx(guy11_diffexp, "results/guy11_bootstrap_diffexp.xlsx")
+write.csv(guy11_diffexp, "results/guy11_bootstrap_diffexp.csv", row.names = FALSE)
+
+guy11_diffexp_summary <- summarise_diffexp_by_stratum(guy11_diffexp)
+write.csv(guy11_diffexp_summary, "results/guy11_bootstrap_diffexp_summary.csv", row.names = FALSE)
+
+ggplot2::ggsave(
+  "results/guy11_bootstrap_diffexp_volcano.png",
+  plot_diffexp_volcano(guy11_diffexp, n_boot = 10000),
+  width = 12, height = 8
+)
+```
+
+```{r guy11-bootstrap-diffexp-reload}
+guy11_diffexp <- readr::read_csv("results/guy11_bootstrap_diffexp.csv", show_col_types = FALSE)
+guy11_diffexp_summary <- summarise_diffexp_by_stratum(guy11_diffexp)
+knitr::kable(guy11_diffexp_summary)
 ```
 
 
