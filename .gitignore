@@ -2,6 +2,7 @@
 .RData
 .Rhistory
 raw/
+raw
 !raw/.gitkeep
 private/
 latex/vscode-latex-wsl-setup
