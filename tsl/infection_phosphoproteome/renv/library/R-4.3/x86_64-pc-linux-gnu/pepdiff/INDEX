@@ -1,0 +1,88 @@
+assess_missing          calculate the proportion of peptides with
+                        missing values per group in a data set.
+classify_bf_evidence    Classify Bayes factor into evidence categories
+combine_tech_reps       Combine technical replicates
+compare                 Compare peptide abundances between conditions
+compare.data.frame      Default compare method for legacy data frames
+compare_calls           compare sets of significant peptides called by
+                        the used data
+compare_many            compare many combinations of treatment and
+                        control
+estimate_result_clusters
+                        plots a Figure of Merit curve to help estimate
+                        the number of clusters in the results
+fc_qqplot               plot qqplot of fold changes from a comparison
+fold_change_matrix      returns a matrix of fold change values
+get_bootstrap_percentile
+                        get p values for contrast using boostrap t test
+get_comparison          Get results for a specific comparison
+get_kruskal_percentile
+                        get p values for contrast using Kruskal-Wallis
+                        test
+get_peptide             Get results for a specific peptide
+get_rp_percentile       get p values for contrast using Rank Products
+                        test
+get_sig_rows            works out if a peptide has at least one
+                        significant value across the experiment
+                        Composes a matrix of the 'metric' significance
+                        values with peptides in rows, experiments in
+                        columns and works out if each peptide row has a
+                        value below the stated cut off
+get_wilcoxon_percentile
+                        get p values for contrast using Wilcoxon test
+import_data             read data from a file
+kmeans_by_selected_cols
+                        Perform kmeans of a dataset using just data in
+                        selected columns, then return matrices of all
+                        columns
+list2mat                converts a results object to a matrix as if for
+                        direct use in external heatmap functions
+long_results            Convert wide format results table to long
+                        format
+metrics                 reports metrics available for significance
+                        values
+missing_peptides_plot   plot the representation of peptides in each
+                        group.
+norm_qqplot             draw qqplots for data
+p_value_hist            plot histograms of p-values for each test used
+plot.pepdiff_data       Plot method for pepdiff_data
+plot.pepdiff_results    Plot method for pepdiff_results
+plot_bf_distribution    Bayes factor distribution plot
+plot_distributions_simple
+                        Simple distribution plot for pepdiff_data
+plot_fc                 plot histogram of fold change distribution for
+                        a comparison
+plot_fc_distribution_new
+                        Fold change distribution for pepdiff_results
+plot_fit_diagnostics    Plot GLM fit diagnostics
+plot_heatmap            makes heatmap from all experiments, filter on a
+                        single metric and sig value
+plot_kmeans             K-means cluster the data on the samples
+plot_missingness_simple
+                        Simple missingness plot for pepdiff_data
+plot_pca                plots a pca on the treatment, seconds, bio-rep
+plot_pca_simple         Simple PCA plot for pepdiff_data
+plot_pvalue_histogram   P-value histogram for pepdiff_results
+plot_quant_distributions
+                        draw density plots for data
+plot_result             plot the p-values against fold change for the
+                        tests used in 'compare()'
+plot_volcano_bf         Volcano plot for Bayes factor results
+plot_volcano_new        Volcano plot for pepdiff_results
+print.pepdiff_data      Print method for pepdiff_data
+print.pepdiff_results   Print method for pepdiff_results
+read_pepdiff            Read proteomics data into a pepdiff_data object
+significant             Extract significant results
+subset.pepdiff_data     Subset a pepdiff_data object
+summary.pepdiff_data    Summary method for pepdiff_data
+summary.pepdiff_results
+                        Summary method for pepdiff_results
+test_bayes_t            Bayes factor t-test for two groups
+test_bootstrap_t        Bootstrap t-test for two groups
+test_rankprod           Rank products test for two groups
+test_wilcoxon           Wilcoxon rank-sum test for two groups
+times_measured          calculate number of measurements of each
+                        peptide in each treatment and time
+times_measured_plot     plot the count of the number of times peptides
+                        were measured.
+volcano_plot            volcano plot the data

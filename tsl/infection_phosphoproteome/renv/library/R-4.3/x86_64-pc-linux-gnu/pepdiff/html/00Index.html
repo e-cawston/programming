@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head><title>R: Differential Abundance Analysis for Phosphoproteomics Data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container">
+<h1> Differential Abundance Analysis for Phosphoproteomics Data
+<img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]" />
+</h1>
+<hr/>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
+</div><h2>Documentation for package &lsquo;pepdiff&rsquo; version 1.0.0</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../NEWS">Package NEWS</a>.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<table style="width: 100%;">
+<tr><td style="width: 25%;"><a href="assess_missing.html">assess_missing</a></td>
+<td>calculate the proportion of peptides with missing values per group in a data set.</td></tr>
+<tr><td style="width: 25%;"><a href="classify_bf_evidence.html">classify_bf_evidence</a></td>
+<td>Classify Bayes factor into evidence categories</td></tr>
+<tr><td style="width: 25%;"><a href="combine_tech_reps.html">combine_tech_reps</a></td>
+<td>Combine technical replicates</td></tr>
+<tr><td style="width: 25%;"><a href="compare.html">compare</a></td>
+<td>Compare peptide abundances between conditions</td></tr>
+<tr><td style="width: 25%;"><a href="compare.data.frame.html">compare.data.frame</a></td>
+<td>Default compare method for legacy data frames</td></tr>
+<tr><td style="width: 25%;"><a href="compare.html">compare.pepdiff_data</a></td>
+<td>Compare peptide abundances between conditions</td></tr>
+<tr><td style="width: 25%;"><a href="compare_calls.html">compare_calls</a></td>
+<td>compare sets of significant peptides called by the used data</td></tr>
+<tr><td style="width: 25%;"><a href="compare_many.html">compare_many</a></td>
+<td>compare many combinations of treatment and control</td></tr>
+<tr><td style="width: 25%;"><a href="estimate_result_clusters.html">estimate_result_clusters</a></td>
+<td>plots a Figure of Merit curve to help estimate the number of clusters in the results</td></tr>
+<tr><td style="width: 25%;"><a href="fc_qqplot.html">fc_qqplot</a></td>
+<td>plot qqplot of fold changes from a comparison</td></tr>
+<tr><td style="width: 25%;"><a href="fold_change_matrix.html">fold_change_matrix</a></td>
+<td>returns a matrix of fold change values</td></tr>
+<tr><td style="width: 25%;"><a href="get_bootstrap_percentile.html">get_bootstrap_percentile</a></td>
+<td>get p values for contrast using boostrap t test</td></tr>
+<tr><td style="width: 25%;"><a href="get_comparison.html">get_comparison</a></td>
+<td>Get results for a specific comparison</td></tr>
+<tr><td style="width: 25%;"><a href="get_kruskal_percentile.html">get_kruskal_percentile</a></td>
+<td>get p values for contrast using Kruskal-Wallis test</td></tr>
+<tr><td style="width: 25%;"><a href="get_peptide.html">get_peptide</a></td>
+<td>Get results for a specific peptide</td></tr>
+<tr><td style="width: 25%;"><a href="get_rp_percentile.html">get_rp_percentile</a></td>
+<td>get p values for contrast using Rank Products test</td></tr>
+<tr><td style="width: 25%;"><a href="get_sig_rows.html">get_sig_rows</a></td>
+<td>works out if a peptide has at least one significant value across the experiment Composes a matrix of the 'metric' significance values with peptides in rows, experiments in columns and works out if each peptide row has a value below the stated cut off</td></tr>
+<tr><td style="width: 25%;"><a href="get_wilcoxon_percentile.html">get_wilcoxon_percentile</a></td>
+<td>get p values for contrast using Wilcoxon test</td></tr>
+<tr><td style="width: 25%;"><a href="import_data.html">import_data</a></td>
+<td>read data from a file</td></tr>
+<tr><td style="width: 25%;"><a href="kmeans_by_selected_cols.html">kmeans_by_selected_cols</a></td>
+<td>Perform kmeans of a dataset using just data in selected columns, then return matrices of all columns</td></tr>
+<tr><td style="width: 25%;"><a href="list2mat.html">list2mat</a></td>
+<td>converts a results object to a matrix as if for direct use in external heatmap functions</td></tr>
+<tr><td style="width: 25%;"><a href="long_results.html">long_results</a></td>
+<td>Convert wide format results table to long format</td></tr>
+<tr><td style="width: 25%;"><a href="metrics.html">metrics</a></td>
+<td>reports metrics available for significance values</td></tr>
+<tr><td style="width: 25%;"><a href="missing_peptides_plot.html">missing_peptides_plot</a></td>
+<td>plot the representation of peptides in each group.</td></tr>
+<tr><td style="width: 25%;"><a href="norm_qqplot.html">norm_qqplot</a></td>
+<td>draw qqplots for data</td></tr>
+<tr><td style="width: 25%;"><a href="plot.pepdiff_data.html">plot.pepdiff_data</a></td>
+<td>Plot method for pepdiff_data</td></tr>
+<tr><td style="width: 25%;"><a href="plot.pepdiff_results.html">plot.pepdiff_results</a></td>
+<td>Plot method for pepdiff_results</td></tr>
+<tr><td style="width: 25%;"><a href="plot_bf_distribution.html">plot_bf_distribution</a></td>
+<td>Bayes factor distribution plot</td></tr>
+<tr><td style="width: 25%;"><a href="plot_distributions_simple.html">plot_distributions_simple</a></td>
+<td>Simple distribution plot for pepdiff_data</td></tr>
+<tr><td style="width: 25%;"><a href="plot_fc.html">plot_fc</a></td>
+<td>plot histogram of fold change distribution for a comparison</td></tr>
+<tr><td style="width: 25%;"><a href="plot_fc_distribution_new.html">plot_fc_distribution_new</a></td>
+<td>Fold change distribution for pepdiff_results</td></tr>
+<tr><td style="width: 25%;"><a href="plot_fit_diagnostics.html">plot_fit_diagnostics</a></td>
+<td>Plot GLM fit diagnostics</td></tr>
+<tr><td style="width: 25%;"><a href="plot_heatmap.html">plot_heatmap</a></td>
+<td>makes heatmap from all experiments, filter on a single metric and sig value</td></tr>
+<tr><td style="width: 25%;"><a href="plot_kmeans.html">plot_kmeans</a></td>
+<td>K-means cluster the data on the samples</td></tr>
+<tr><td style="width: 25%;"><a href="plot_missingness_simple.html">plot_missingness_simple</a></td>
+<td>Simple missingness plot for pepdiff_data</td></tr>
+<tr><td style="width: 25%;"><a href="plot_pca.html">plot_pca</a></td>
+<td>plots a pca on the treatment, seconds, bio-rep</td></tr>
+<tr><td style="width: 25%;"><a href="plot_pca_simple.html">plot_pca_simple</a></td>
+<td>Simple PCA plot for pepdiff_data</td></tr>
+<tr><td style="width: 25%;"><a href="plot_pvalue_histogram.html">plot_pvalue_histogram</a></td>
+<td>P-value histogram for pepdiff_results</td></tr>
+<tr><td style="width: 25%;"><a href="plot_quant_distributions.html">plot_quant_distributions</a></td>
+<td>draw density plots for data</td></tr>
+<tr><td style="width: 25%;"><a href="plot_result.html">plot_result</a></td>
+<td>plot the p-values against fold change for the tests used in 'compare()'</td></tr>
+<tr><td style="width: 25%;"><a href="plot_volcano_bf.html">plot_volcano_bf</a></td>
+<td>Volcano plot for Bayes factor results</td></tr>
+<tr><td style="width: 25%;"><a href="plot_volcano_new.html">plot_volcano_new</a></td>
+<td>Volcano plot for pepdiff_results</td></tr>
+<tr><td style="width: 25%;"><a href="print.pepdiff_data.html">print.pepdiff_data</a></td>
+<td>Print method for pepdiff_data</td></tr>
+<tr><td style="width: 25%;"><a href="print.pepdiff_results.html">print.pepdiff_results</a></td>
+<td>Print method for pepdiff_results</td></tr>
+<tr><td style="width: 25%;"><a href="p_value_hist.html">p_value_hist</a></td>
+<td>plot histograms of p-values for each test used</td></tr>
+<tr><td style="width: 25%;"><a href="read_pepdiff.html">read_pepdiff</a></td>
+<td>Read proteomics data into a pepdiff_data object</td></tr>
+<tr><td style="width: 25%;"><a href="significant.html">significant</a></td>
+<td>Extract significant results</td></tr>
+<tr><td style="width: 25%;"><a href="subset.pepdiff_data.html">subset.pepdiff_data</a></td>
+<td>Subset a pepdiff_data object</td></tr>
+<tr><td style="width: 25%;"><a href="summary.pepdiff_data.html">summary.pepdiff_data</a></td>
+<td>Summary method for pepdiff_data</td></tr>
+<tr><td style="width: 25%;"><a href="summary.pepdiff_results.html">summary.pepdiff_results</a></td>
+<td>Summary method for pepdiff_results</td></tr>
+<tr><td style="width: 25%;"><a href="test_bayes_t.html">test_bayes_t</a></td>
+<td>Bayes factor t-test for two groups</td></tr>
+<tr><td style="width: 25%;"><a href="test_bootstrap_t.html">test_bootstrap_t</a></td>
+<td>Bootstrap t-test for two groups</td></tr>
+<tr><td style="width: 25%;"><a href="test_rankprod.html">test_rankprod</a></td>
+<td>Rank products test for two groups</td></tr>
+<tr><td style="width: 25%;"><a href="test_wilcoxon.html">test_wilcoxon</a></td>
+<td>Wilcoxon rank-sum test for two groups</td></tr>
+<tr><td style="width: 25%;"><a href="times_measured.html">times_measured</a></td>
+<td>calculate number of measurements of each peptide in each treatment and time</td></tr>
+<tr><td style="width: 25%;"><a href="times_measured_plot.html">times_measured_plot</a></td>
+<td>plot the count of the number of times peptides were measured.</td></tr>
+<tr><td style="width: 25%;"><a href="volcano_plot.html">volcano_plot</a></td>
+<td>volcano plot the data</td></tr>
+</table>
+</div></body></html>
