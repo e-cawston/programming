@@ -125,9 +125,6 @@ process_vsn_imputation <- function(input_path, experiment_name, output_dir = "re
   summary_path <- file.path(output_dir,
           paste0(experiment_name, "_", stage,
             "_vsn_imputation_summary.xlsx"))
-  summary_csv_path <- file.path(output_dir,
-              paste0(experiment_name, "_", stage,
-                "_vsn_imputation_summary.csv"))
   writexl::write_xlsx(normalized_df, normalized_path)
   writexl::write_xlsx(imputed_df, imputed_path)
 
@@ -142,7 +139,6 @@ process_vsn_imputation <- function(input_path, experiment_name, output_dir = "re
     remaining_na = sum(is.na(imputed_mat))
   )
   writexl::write_xlsx(summary, summary_path)
-  utils::write.csv(summary, summary_csv_path, row.names = FALSE)
   message(experiment_name, ": ", nrow(vsn_mat), " sites x ", ncol(vsn_mat),
           " samples; MNAR=", summary$mnar_imputed,
           ", MAR=", summary$mar_imputed,
@@ -159,7 +155,6 @@ process_vsn_imputation <- function(input_path, experiment_name, output_dir = "re
     summary = summary,
     normalized_path = normalized_path,
     imputed_path = imputed_path,
-    summary_path = summary_path,
-    summary_csv_path = summary_csv_path
+    summary_path = summary_path
   )
 }

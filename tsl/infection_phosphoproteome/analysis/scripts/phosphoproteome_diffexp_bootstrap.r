@@ -339,18 +339,34 @@ correlate_peptide_kinetics <- function(long_data, peptides,
                                        experiment_a, experiment_b,
                                        timepoint_order = c("0h", "1h", "1.5h", "2h", "4h", "6h"),
                                        min_points = 3) {
-  mean_by_tp <- long_data %>%
-    dplyr::filter(.data$peptide %in% peptides) %>%
-    dplyr::group_by(.data$peptide, .data$gene_id, .data$experiment, .data$timepoint) %>%
+  data_subset <- long_data %>% dplyr::filter(.data$peptide %in% peptides)
+
+  # One representative gene_id per peptide, independent of experiment. The
+  # two experiments are separate FragPipe searches, and for a handful of
+  # peptides they assign a different transcript isoform of the *same* gene
+  # (e.g. "MGG_01596T0" vs "MGG_01596T1") -- gene_id must NOT be part of the
+  # pivot's row identity below, or that label mismatch silently splits every
+  # timepoint into two experiment-specific rows (real data in both
+  # experiments, but neither column overlaps -> n_points = 0 for a peptide
+  # that actually has a complete 6-point trajectory in both).
+  gene_id_lookup <- data_subset %>%
+    dplyr::distinct(.data$peptide, .data$gene_id) %>%
+    dplyr::filter(!is.na(.data$gene_id)) %>%
+    dplyr::distinct(.data$peptide, .keep_all = TRUE)
+
+  mean_by_tp <- data_subset %>%
+    dplyr::group_by(.data$peptide, .data$experiment, .data$timepoint) %>%
     dplyr::summarise(mean_value = mean(.data$value, na.rm = TRUE), .groups = "drop")
 
   wide <- mean_by_tp %>%
     tidyr::pivot_wider(
-      id_cols = c(peptide, gene_id, timepoint),
+      id_cols = c(peptide, timepoint),
       names_from = experiment, values_from = mean_value
     )
 
   purrr::map_dfr(peptides, function(pep) {
+    gene_id <- gene_id_lookup$gene_id[match(pep, gene_id_lookup$peptide)]
+
     pep_wide <- wide %>%
       dplyr::filter(.data$peptide == pep) %>%
       dplyr::mutate(timepoint = factor(.data$timepoint, levels = timepoint_order)) %>%
@@ -358,7 +374,6 @@ correlate_peptide_kinetics <- function(long_data, peptides,
       dplyr::filter(!is.na(.data[[experiment_a]]), !is.na(.data[[experiment_b]]))
 
     n_points <- nrow(pep_wide)
-    gene_id <- if (n_points > 0) pep_wide$gene_id[1] else NA_character_
 
     if (n_points < min_points) {
       return(tibble::tibble(
@@ -376,9 +391,97 @@ correlate_peptide_kinetics <- function(long_data, peptides,
   })
 }
 
+#' Randomly sample example peptides from three correlation-strength buckets
+#' (low/negative, no/near-zero, high/positive), for "does r actually look
+#' like what it says" sanity-check plots (see [plot_peptide_kinetics_grid()]).
+#'
+#' Random sampling within each bucket (rather than picking the single most
+#' extreme peptides) gives a fairer sense of what a *typical* negatively /
+#' un- / positively correlated peptide's trajectory looks like, not just
+#' the handful of most dramatic examples.
+#'
+#' @param cor_results Output of [correlate_peptide_kinetics()]
+#' @param n How many peptides to sample per bucket (default 10)
+#' @param low_threshold Bucket "low" (negatively correlated) is r <= this (default -0.5)
+#' @param no_threshold Bucket "no" (near-zero correlation) is |r| <= this (default 0.1)
+#' @param high_threshold Bucket "high" (positively correlated) is r >= this (default 0.5)
+#' @param seed RNG seed for reproducible sampling
+#' @return Named list of three tibbles: `low`, `no`, `high` (each a random
+#'   sample of `cor_results`, dropping rows with `r = NA`). If a bucket has
+#'   fewer than `n` peptides available, every peptide in it is returned,
+#'   with a warning.
+select_kinetics_examples <- function(cor_results, n = 10,
+                                     low_threshold = -0.5, no_threshold = 0.1,
+                                     high_threshold = 0.5, seed = 1) {
+  valid <- cor_results %>% dplyr::filter(!is.na(.data$r))
+
+  sample_bucket <- function(bucket_df, bucket_name) {
+    if (nrow(bucket_df) < n) {
+      warning(sprintf(
+        "Only %d peptides available in the '%s' bucket (requested %d); returning all of them",
+        nrow(bucket_df), bucket_name, n
+      ), call. = FALSE)
+      return(bucket_df)
+    }
+    dplyr::slice_sample(bucket_df, n = n)
+  }
+
+  set.seed(seed)
+  list(
+    low = valid %>% dplyr::filter(.data$r <= low_threshold) %>% sample_bucket("low"),
+    no = valid %>% dplyr::filter(abs(.data$r) <= no_threshold) %>% sample_bucket("no"),
+    high = valid %>% dplyr::filter(.data$r >= high_threshold) %>% sample_bucket("high")
+  )
+}
+
 # =============================================================================
 # 5. Plotting helpers
 # =============================================================================
+
+#' Volcano plot(s) of the stage-1 timepoint-vs-0h bootstrap-t results
+#'
+#' One panel per (experiment, timepoint) comparison: x-axis is log2 fold
+#' change vs 0h, y-axis is -log10(p), points colored by whether they pass
+#' the |log2FC|>=fc_threshold & p<p_threshold filter (matching
+#' [filter_significant_peptides()]'s criteria, not the FDR-based
+#' `significant` column, so the plot's color matches whatever peptide set
+#' actually got carried into the kinetics correlation step).
+#'
+#' @param results Output of [run_bootstrap_vs_ref()] (or the combined
+#'   stage-1 tibble with an `experiment` column, e.g. read back from
+#'   results/guy11_timepoint_vs_0h_bootstrap.xlsx)
+#' @param n_boot The n_boot used to generate `results`, for flooring
+#'   p-values before the -log10 transform (a bootstrap p-value of exactly 0
+#'   only means "smaller than 1/(n_boot+1) could resolve", not truly zero)
+#' @param fc_threshold,p_threshold Significance cutoffs to color by
+#'   (defaults match [filter_significant_peptides()])
+#' @param timepoint_order Order of timepoints across facet columns
+#' @return ggplot object, faceted by experiment (rows) x timepoint (columns)
+plot_diffexp_volcano <- function(results, n_boot = 10000,
+                                 fc_threshold = 1, p_threshold = 0.05,
+                                 timepoint_order = c("1h", "1.5h", "2h", "4h", "6h")) {
+  p_floor <- 1 / (n_boot + 1)
+  results %>%
+    dplyr::mutate(
+      treatment = factor(.data$treatment, levels = timepoint_order),
+      called_significant = abs(.data$log2_fc) >= fc_threshold & .data$p_value < p_threshold,
+      p_plot = pmax(.data$p_value, p_floor),
+      neg_log10_p = -log10(.data$p_plot)
+    ) %>%
+    ggplot(aes(x = log2_fc, y = neg_log10_p, color = called_significant)) +
+    geom_point(alpha = 0.4, size = 0.6) +
+    geom_vline(xintercept = c(-fc_threshold, fc_threshold), linetype = "dashed", color = "grey50") +
+    geom_hline(yintercept = -log10(p_threshold), linetype = "dashed", color = "grey50") +
+    scale_color_manual(values = c(`TRUE` = "firebrick", `FALSE` = "grey60"), na.value = "grey85") +
+    facet_grid(experiment ~ treatment) +
+    theme_minimal() +
+    labs(
+      x = "log2 fold change (timepoint vs 0h, VSN scale)",
+      y = expression(-log[10](p)),
+      color = paste0("|log2FC|>=", fc_threshold, " & p<", p_threshold),
+      title = "Guy11 timepoint-vs-0h bootstrap-t: volcano plots by experiment and timepoint"
+    )
+}
 
 #' Histogram of per-peptide kinetics correlation coefficients
 #'
@@ -418,4 +521,51 @@ plot_peptide_kinetics <- function(long_data, peptide_id,
       x = "Timepoint", y = "VSN-normalized intensity",
       title = paste0("Peptide kinetics: ", peptide_id), color = "Experiment"
     )
+}
+
+#' Grid of kinetics trajectories for several peptides at once, one small
+#' panel per peptide (faceted), labelled with each peptide's gene ID and
+#' its kinetics correlation r rather than the raw modified-sequence string.
+#'
+#' @param long_data Long tibble from [build_guy11_between_experiments_data()]
+#' @param selection A tibble with columns `peptide` and `r` (and optionally
+#'   `gene_id`) -- e.g. a slice of [correlate_peptide_kinetics()]'s output.
+#'   Panel order follows this tibble's row order.
+#' @param timepoint_order Order of timepoints along each panel's x-axis
+#' @param ncol Number of facet columns
+#' @param title Overall plot title
+#' @return ggplot object
+plot_peptide_kinetics_grid <- function(long_data, selection,
+                                       timepoint_order = c("0h", "1h", "1.5h", "2h", "4h", "6h"),
+                                       ncol = 5, title = NULL) {
+  labels <- selection %>%
+    dplyr::mutate(
+      # gene_id (from the "Protein ID" column) is a full FASTA header, e.g.
+      # "MGG_17596T0 pep chromosome:MG8:... description:...": keep only the
+      # leading transcript ID token so facet strips stay short and legible.
+      gene_short = if ("gene_id" %in% names(selection)) {
+        stringr::str_extract(.data$gene_id, "^\\S+")
+      } else {
+        NA_character_
+      },
+      label = sprintf(
+        "%s\nr = %.3f",
+        dplyr::coalesce(.data$gene_short, .data$peptide),
+        .data$r
+      ),
+      label = factor(.data$label, levels = unique(.data$label))
+    ) %>%
+    dplyr::select(peptide, label)
+
+  long_data %>%
+    dplyr::inner_join(labels, by = "peptide") %>%
+    dplyr::mutate(timepoint = factor(.data$timepoint, levels = timepoint_order)) %>%
+    ggplot(aes(x = timepoint, y = value, color = experiment, group = experiment)) +
+    stat_summary(fun = mean, geom = "line", linewidth = 0.8) +
+    stat_summary(fun = mean, geom = "point", size = 1.3) +
+    geom_jitter(width = 0.1, alpha = 0.3, size = 0.6) +
+    facet_wrap(~label, ncol = ncol, scales = "free_y") +
+    theme_minimal(base_size = 9) +
+    theme(strip.text = element_text(size = 7)) +
+    labs(x = "Timepoint", y = "VSN-normalized intensity", color = "Experiment", title = title)
 }

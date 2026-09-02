@@ -148,8 +148,8 @@ summary_all_stages <- dplyr::bind_rows(
   mst7_summary_filtered, mst7_summary_normalized, mst7_summary_imputed
 )
 
-write.csv(summary_all_stages,
-          "results/summary_phospho_all_stages.csv", row.names = FALSE)
+writexl::write_xlsx(summary_all_stages,
+                    "results/summary_phospho_all_stages.xlsx")
 ggplot2::ggsave("results/summary_total_spectral_counts_by_stage.png",
                 plot_stage_spectral_counts(summary_all_stages), width = 12, height = 7)
 ggplot2::ggsave("results/summary_total_maxlfq_by_stage.png",
@@ -247,10 +247,8 @@ summary_comparison <- dplyr::bind_rows(
 )
 overall_summary_comparison <- overall_phospho_summary(summary_comparison)
 
-write.csv(pmk1_summary_only, "results/pmk1_summary_phospho_only.csv", row.names = FALSE)
-write.csv(mst7_summary_only, "results/mst7_summary_phospho_only.csv", row.names = FALSE)
-write.csv(overall_summary_comparison,
-          "results/overall_summary_comparison.csv", row.names = FALSE)
+writexl::write_xlsx(pmk1_summary_only, "results/pmk1_summary_phospho_only.xlsx")
+writexl::write_xlsx(mst7_summary_only, "results/mst7_summary_phospho_only.xlsx")
 writexl::write_xlsx(overall_summary_comparison,
                     "results/overall_summary_comparison.xlsx")
 ```
@@ -411,68 +409,94 @@ for (plot_name in names(venn_plots)) {
 ```
 
 
-## Guy11 vs Guy11 between experiments (pepdiff bootstrap-t)
+## Guy11 within-experiment kinetics, then between-experiment correlation (pepdiff bootstrap-t)
 
 Guy11 (wild type) was run as the shared control genotype in both the mst7
 experiment and the pmk1 experiment -- two separate MS submissions/batches.
-Comparing Guy11-in-mst7-experiment against Guy11-in-pmk1-experiment at each
-timepoint tests for batch effects / reproducibility between the two
-"control" datasets, using
-[pepdiff](https://github.com/TeamMacLean/pepdiff)'s bootstrap-t test with
-10,000 iterations.
+This asks: within each experiment, which Guy11 phosphosites change over
+the timecourse relative to 0h, and for the ones that do, does the *shape*
+of that response over time (its kinetics) reproduce between the two
+experiments?
 
-This uses VSN-normalized, non-imputed intensities (imputed values are
-fabricated fill-ins and would bias a t-test's variance estimate), and
-`Modified Sequence` as the peptide/site identifier (`Peptide Sequence`
-alone is not unique per row -- see the script header for details).
-`pepdiff::compare()` hardcodes `n_boot = 1000` and doesn't expose it, so
-this calls `pepdiff::test_bootstrap_t()` directly per peptide per
-timepoint; see `analysis/scripts/phosphoproteome_diffexp_bootstrap.r` for
-the full rationale.
+1. Within each experiment separately, test every timepoint (1h, 1.5h, 2h,
+   4h, 6h) against 0h for Guy11, using
+   [pepdiff](https://github.com/TeamMacLean/pepdiff)'s bootstrap-t test
+   with 10,000 iterations. Keep phosphosites with `|log2FC| >= 1 & p <
+   0.05` at any comparison, in either experiment.
+2. For that significant set, correlate each phosphosite's actual
+   mean-intensity trajectory across all 6 timepoints between the two
+   experiments (Pearson r per peptide).
 
-**This is a multi-hour computation** (~16,000 shared phosphosites x 6
-timepoints x 10,000 bootstrap iterations each). It is not intended to be
-re-run live inside an interactive knit -- run it once via `Rscript`
-(results are checkpointed per timepoint in `results/guy11_bootstrap_checkpoints/`
-so an interrupted run can resume) and just reload the saved results here.
+This uses VSN-normalized, **imputed** intensities, and `Modified Sequence`
+as the peptide/site identifier (`Peptide Sequence` alone is not unique per
+row -- see the script header for details, including a caveat on
+MNAR-imputed cells). `pepdiff::compare()` hardcodes `n_boot = 1000` and
+doesn't expose it, so this calls `pepdiff::test_bootstrap_t()` directly;
+see `analysis/scripts/phosphoproteome_diffexp_bootstrap.r` for the full
+rationale.
+
+**This is a multi-hour computation** (~16,000 shared phosphosites x 5
+timepoints x 2 experiments x 10,000 bootstrap iterations each -- every one
+of them runs the full bootstrap, since imputed data has no missing values
+to short-circuit on). It is not intended to be re-run live inside an
+interactive knit -- run `analysis/scripts/run_guy11_bootstrap_diffexp.r`
+once via `Rscript` (results are checkpointed per comparison in
+`results/guy11_bootstrap_checkpoints/` so an interrupted run can resume;
+a `.sbatch` version is also available for running it on the HPC instead)
+and just reload the saved results here.
 
 ```{r guy11-bootstrap-diffexp, eval=FALSE}
-guy11_long_data <- build_guy11_between_experiments_data(
-  path_a = "results/mst7_05_vsn_normalized_nonimputed.xlsx",
-  path_b = "results/pmk1_05_vsn_normalized_nonimputed.xlsx",
-  experiment_a = "mst7",
-  experiment_b = "pmk1"
-)
-
-guy11_pepdiff_data <- prepare_pepdiff_data(
-  guy11_long_data,
-  csv_path = "results/guy11_between_experiments_long.csv"
-)
-
-guy11_diffexp <- run_guy11_bootstrap_diffexp(
-  guy11_pepdiff_data,
-  compare = "experiment", ref = "mst7", within = "timepoint",
-  n_boot = 10000, seed = 1,
-  checkpoint_dir = "results/guy11_bootstrap_checkpoints"
-)
-
-writexl::write_xlsx(guy11_diffexp, "results/guy11_bootstrap_diffexp.xlsx")
-write.csv(guy11_diffexp, "results/guy11_bootstrap_diffexp.csv", row.names = FALSE)
-
-guy11_diffexp_summary <- summarise_diffexp_by_stratum(guy11_diffexp)
-write.csv(guy11_diffexp_summary, "results/guy11_bootstrap_diffexp_summary.csv", row.names = FALSE)
-
-ggplot2::ggsave(
-  "results/guy11_bootstrap_diffexp_volcano.png",
-  plot_diffexp_volcano(guy11_diffexp, n_boot = 10000),
-  width = 12, height = 8
-)
+# Equivalent to running: Rscript analysis/scripts/run_guy11_bootstrap_diffexp.r
+source("analysis/scripts/run_guy11_bootstrap_diffexp.r")
 ```
 
 ```{r guy11-bootstrap-diffexp-reload}
-guy11_diffexp <- readr::read_csv("results/guy11_bootstrap_diffexp.csv", show_col_types = FALSE)
-guy11_diffexp_summary <- summarise_diffexp_by_stratum(guy11_diffexp)
-knitr::kable(guy11_diffexp_summary)
+guy11_timepoint_vs_0h <- readxl::read_xlsx("results/guy11_timepoint_vs_0h_bootstrap.xlsx")
+guy11_kinetics_cor <- readxl::read_xlsx("results/guy11_kinetics_correlation.xlsx")
+knitr::kable(summary(guy11_kinetics_cor$r))
+```
+
+### Sanity checks: volcano plots and kinetics correlation
+
+```{r guy11-volcano-plots}
+p_volcano <- plot_diffexp_volcano(guy11_timepoint_vs_0h, n_boot = 10000)
+print(p_volcano)
+ggplot2::ggsave("results/guy11_timepoint_vs_0h_bootstrap_volcano.png", p_volcano, width = 16, height = 7)
+```
+
+```{r guy11-kinetics-correlation-distribution}
+p_kinetics_dist <- plot_kinetics_correlation_distribution(guy11_kinetics_cor)
+print(p_kinetics_dist)
+ggplot2::ggsave("results/guy11_kinetics_correlation_distribution.png", p_kinetics_dist, width = 10, height = 7)
+```
+
+Example trajectories: 10 randomly sampled peptides from each of three
+correlation-strength buckets (low/negative r <= -0.5, no/near-zero
+|r| <= 0.1, high/positive r >= 0.5) -- a visual check that the correlation
+numbers reflect real agreement or disagreement in shape, not just noise.
+Random sampling within each bucket (rather than the single most extreme
+peptides) gives a fairer sense of what a *typical* peptide in that bucket
+looks like.
+
+```{r guy11-kinetics-examples}
+guy11_long_data <- readxl::read_xlsx("results/guy11_between_experiments_long_imputed.xlsx")
+kin_examples <- select_kinetics_examples(guy11_kinetics_cor, n = 10, seed = 1)
+
+p_low <- plot_peptide_kinetics_grid(guy11_long_data, kin_examples$low, title = "10 random low/negatively correlated Guy11 peptide kinetics (mst7 vs pmk1)")
+p_no <- plot_peptide_kinetics_grid(guy11_long_data, kin_examples$no, title = "10 random no/near-zero correlation Guy11 peptide kinetics")
+p_high <- plot_peptide_kinetics_grid(guy11_long_data, kin_examples$high, title = "10 random high/positively correlated Guy11 peptide kinetics (mst7 vs pmk1)")
+
+print(p_low)
+print(p_no)
+print(p_high)
+
+ggplot2::ggsave("results/guy11_kinetics_examples_low.png", p_low, width = 14, height = 7)
+ggplot2::ggsave("results/guy11_kinetics_examples_no.png", p_no, width = 14, height = 7)
+ggplot2::ggsave("results/guy11_kinetics_examples_high.png", p_high, width = 14, height = 7)
+
+writexl::write_xlsx(kin_examples$low, "results/guy11_kinetics_examples_low.xlsx")
+writexl::write_xlsx(kin_examples$no, "results/guy11_kinetics_examples_no.xlsx")
+writexl::write_xlsx(kin_examples$high, "results/guy11_kinetics_examples_high.xlsx")
 ```
 
 

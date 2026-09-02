@@ -36,7 +36,7 @@ guy11_long_data <- build_guy11_between_experiments_data(
   experiment_a = "mst7",
   experiment_b = "pmk1"
 )
-readr::write_csv(guy11_long_data, "results/guy11_between_experiments_long_imputed.csv")
+writexl::write_xlsx(guy11_long_data, "results/guy11_between_experiments_long_imputed.xlsx")
 
 # ---- Stage 1: within-experiment 0h-vs-timepoint bootstrap-t, per experiment ----
 message("[", format(Sys.time(), "%H:%M:%S"), "] Starting 10,000-iteration bootstrap-t, mst7 experiment (Guy11, vs 0h)...")
@@ -58,7 +58,12 @@ stage1_results <- dplyr::bind_rows(
   pmk1_results %>% dplyr::mutate(experiment = "pmk1", .before = 1)
 )
 writexl::write_xlsx(stage1_results, "results/guy11_timepoint_vs_0h_bootstrap.xlsx")
-write.csv(stage1_results, "results/guy11_timepoint_vs_0h_bootstrap.csv", row.names = FALSE)
+
+ggplot2::ggsave(
+  "results/guy11_timepoint_vs_0h_bootstrap_volcano.png",
+  plot_diffexp_volcano(stage1_results, n_boot = 10000),
+  width = 16, height = 7
+)
 
 # ---- Filter: |log2FC| >= 1 & p < 0.05 at any comparison, in either experiment ----
 sig_peptides <- union(
@@ -78,7 +83,6 @@ kinetics_cor <- correlate_peptide_kinetics(
   experiment_a = "mst7", experiment_b = "pmk1"
 )
 writexl::write_xlsx(kinetics_cor, "results/guy11_kinetics_correlation.xlsx")
-write.csv(kinetics_cor, "results/guy11_kinetics_correlation.csv", row.names = FALSE)
 
 cat("\nKinetics correlation summary (Pearson r per peptide, mst7 vs pmk1):\n")
 print(summary(kinetics_cor$r))
@@ -90,7 +94,7 @@ ggplot2::ggsave(
 )
 
 message("[", format(Sys.time(), "%H:%M:%S"), "] DONE. Key outputs:")
-message("  results/guy11_timepoint_vs_0h_bootstrap.{csv,xlsx}  -- stage 1 per-peptide log2FC/p vs 0h, both experiments")
+message("  results/guy11_timepoint_vs_0h_bootstrap.xlsx        -- stage 1 per-peptide log2FC/p vs 0h, both experiments")
 message("  results/guy11_significant_peptides.txt              -- peptides passing |log2FC|>=1 & p<0.05")
-message("  results/guy11_kinetics_correlation.{csv,xlsx}       -- stage 2 per-peptide Pearson r (mst7 vs pmk1 trajectory)")
+message("  results/guy11_kinetics_correlation.xlsx             -- stage 2 per-peptide Pearson r (mst7 vs pmk1 trajectory)")
 message("  results/guy11_kinetics_correlation_distribution.png -- histogram of those r values")
