@@ -69,7 +69,7 @@ print(fig_tukey)
 ```{r}
 # Save the Tukey test figure
 ggsave(
-  filename = here("figures/tukey_test_results.png"),
+  filename = here("figures/virulence_tukey_test_results.png"),
   plot = fig_tukey,
   width = 10,
   height = 7,

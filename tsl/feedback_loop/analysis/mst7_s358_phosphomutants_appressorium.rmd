@@ -1,0 +1,99 @@
+---
+title: "MST7 S358 Phosphomutants: Appressorium Phenotype Analysis"
+author: "Euan (Modified)"
+date: "2026-03-12"
+output: html_document
+---
+
+# 1. Load Libraries and Source Functions
+
+```{r libraries, message=FALSE, warning=FALSE}
+library(readr)
+library(here)
+library(ggplot2)
+library(multcompView)
+library(dplyr)
+library(ggpubr)
+
+source("analysis/scripts/appressorium_assay.R")
+```
+
+# 2. Data Loading and Plotting
+```{r}
+raw_dir <- here("raw")
+raw_file <- "appressoria_phenotype.csv"
+
+# Define strain order (reversed for horizontal plot)
+my_strain_order <- rev(c("Guy11", "mst7", "WT_9.2", "WT_12.2",
+                         "PM_1.1", "PM_3.1", "PD_1.3", "PD_3.5"))
+
+# Create clean and annotated boxplots
+boxplot_clean <- plot_appressoria_boxplot_no_signif(
+  file.path(raw_dir, raw_file),
+  strain_order = my_strain_order)
+
+boxplot_plt <- plot_appressoria_boxplot(
+  file.path(raw_dir, raw_file),
+  strain_order = my_strain_order,
+  annotate_significance = TRUE)
+
+print(boxplot_plt)
+```
+
+## Chi-square tests of count data
+
+```{r}
+chi_square_results <- chi_square_appressoria(file.path(raw_dir, raw_file))
+print(chi_square_results)
+```
+
+## One-way ANOVA
+
+```{r}
+# Perform one-way ANOVA
+anova_result <- perform_appressoria_anova(file.path(raw_dir, raw_file))
+anova_summary <- summary(anova_result)
+print(anova_summary)
+
+# Extract p-value and F-statistic from ANOVA
+anova_pvalue <- anova_summary[[1]]$`Pr(>F)`[1]
+anova_fstat <- anova_summary[[1]]$`F value`[1]
+```
+
+## Tukey Post-hoc Test
+
+```{r}
+# Perform Tukey HSD test
+tukey_result <- perform_appressoria_tukey(file.path(raw_dir, raw_file))
+print(tukey_result)
+```
+
+## Save Figure
+
+```{r}
+# Save the clean boxplot
+ggsave(
+  filename = here("figures/Horizontal_Boxplot_appressoria.svg"),
+  plot = boxplot_clean,
+  width = 6,
+  height = 8
+)
+```
+
+## Save Figure with Statistics
+
+```{r}
+# Save the boxplot with significance annotations
+ggsave(
+  filename = here("figures/Horizontal_Boxplot_appressoria_with_stats.svg"),
+  plot = boxplot_plt,
+  width = 6,
+  height = 8
+)
+
+write.csv(
+  chi_square_results,
+  here("figures/appressoria_chi_square_results.csv"),
+  row.names = FALSE
+)
+```

@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='432.00pt' height='576.00pt' viewBox='0 0 432.00 576.00'>
+<g class='svglite'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+    .svglite g.glyphgroup path {
+      fill: inherit;
+      stroke: none;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: #FFFFFF;'/>
+<defs>
+  <clipPath id='cpMC4wMHw0MzIuMDB8MC4wMHw1NzYuMDA='>
+    <rect x='0.00' y='0.00' width='432.00' height='576.00' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHw0MzIuMDB8MC4wMHw1NzYuMDA=)'>
+<rect x='0.000000000000032' y='0.00' width='432.00' height='576.00' style='stroke-width: 1.07; stroke: #FFFFFF; fill: #FFFFFF;' />
+</g>
+<defs>
+  <clipPath id='cpNTguNjl8NDI2LjUyfDIyLjc4fDU0NS4xMA=='>
+    <rect x='58.69' y='22.78' width='367.83' height='522.32' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNTguNjl8NDI2LjUyfDIyLjc4fDU0NS4xMA==)'>
+<rect x='58.69' y='22.78' width='367.83' height='522.32' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
+<line x1='350.27' y1='506.88' x2='355.54' y2='506.88' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<line x1='340.46' y1='506.88' x2='335.90' y2='506.88' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polygon points='350.27,530.77 340.46,530.77 340.46,483.00 350.27,483.00 350.27,530.77 ' style='stroke-width: 1.07; stroke-linecap: butt; stroke-linejoin: miter; fill: #F7F7F7;' />
+<line x1='345.01' y1='530.77' x2='345.01' y2='483.00' style='stroke-width: 2.13; stroke-linecap: butt; stroke-linejoin: miter;' />
+<line x1='357.23' y1='443.19' x2='358.47' y2='443.19' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<line x1='338.53' y1='443.19' x2='321.08' y2='443.19' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polygon points='357.23,467.07 338.53,467.07 338.53,419.30 357.23,419.30 357.23,467.07 ' style='stroke-width: 1.07; stroke-linecap: butt; stroke-linejoin: miter; fill: #F7F7F7;' />
+<line x1='355.98' y1='467.07' x2='355.98' y2='419.30' style='stroke-width: 2.13; stroke-linecap: butt; stroke-linejoin: miter;' />
+<line x1='272.11' y1='379.49' x2='298.16' y2='379.49' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<line x1='239.00' y1='379.49' x2='231.93' y2='379.49' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polygon points='272.11,403.37 239.00,403.37 239.00,355.60 272.11,355.60 272.11,403.37 ' style='stroke-width: 1.07; stroke-linecap: butt; stroke-linejoin: miter; fill: #F7F7F7;' />
+<line x1='246.07' y1='403.37' x2='246.07' y2='355.60' style='stroke-width: 2.13; stroke-linecap: butt; stroke-linejoin: miter;' />
+<line x1='318.09' y1='315.79' x2='321.45' y2='315.79' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<line x1='275.37' y1='315.79' x2='236.01' y2='315.79' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polygon points='318.09,339.68 275.37,339.68 275.37,291.90 318.09,291.90 318.09,339.68 ' style='stroke-width: 1.07; stroke-linecap: butt; stroke-linejoin: miter; fill: #F7F7F7;' />
+<line x1='314.73' y1='339.68' x2='314.73' y2='291.90' style='stroke-width: 2.13; stroke-linecap: butt; stroke-linejoin: miter;' />
+<line x1='345.70' y1='252.09' x2='347.60' y2='252.09' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<line x1='334.05' y1='252.09' x2='324.29' y2='252.09' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polygon points='345.70,275.98 334.05,275.98 334.05,228.21 345.70,228.21 345.70,275.98 ' style='stroke-width: 1.07; stroke-linecap: butt; stroke-linejoin: miter; fill: #F7F7F7;' />
+<line x1='343.80' y1='275.98' x2='343.80' y2='228.21' style='stroke-width: 2.13; stroke-linecap: butt; stroke-linejoin: miter;' />
+<line x1='349.88' y1='188.39' x2='350.09' y2='188.39' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<line x1='333.12' y1='188.39' x2='316.56' y2='188.39' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polygon points='349.88,212.28 333.12,212.28 333.12,164.51 349.88,164.51 349.88,212.28 ' style='stroke-width: 1.07; stroke-linecap: butt; stroke-linejoin: miter; fill: #F7F7F7;' />
+<line x1='349.67' y1='212.28' x2='349.67' y2='164.51' style='stroke-width: 2.13; stroke-linecap: butt; stroke-linejoin: miter;' />
+<line x1='65.14' y1='124.70' x2='65.14' y2='124.70' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<line x1='65.14' y1='124.70' x2='65.14' y2='124.70' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polygon points='65.14,148.58 65.14,148.58 65.14,100.81 65.14,100.81 65.14,148.58 ' style='stroke-width: 1.07; stroke-linecap: butt; stroke-linejoin: miter; fill: #F7F7F7;' />
+<line x1='65.14' y1='148.58' x2='65.14' y2='100.81' style='stroke-width: 2.13; stroke-linecap: butt; stroke-linejoin: miter;' />
+<line x1='352.60' y1='61.00' x2='352.60' y2='61.00' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<line x1='349.67' y1='61.00' x2='346.74' y2='61.00' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polygon points='352.60,84.89 349.67,84.89 349.67,37.11 352.60,37.11 352.60,84.89 ' style='stroke-width: 1.07; stroke-linecap: butt; stroke-linejoin: miter; fill: #F7F7F7;' />
+<line x1='352.60' y1='84.89' x2='352.60' y2='37.11' style='stroke-width: 2.13; stroke-linecap: butt; stroke-linejoin: miter;' />
+<circle cx='352.60' cy='66.99' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='65.14' cy='130.21' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='349.67' cy='197.32' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='347.60' cy='246.58' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='321.45' cy='314.81' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='298.16' cy='381.56' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='355.98' cy='434.00' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='355.54' cy='516.04' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='352.60' cy='58.80' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='65.14' cy='125.82' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='350.09' cy='185.09' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='343.80' cy='245.93' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='314.73' cy='310.03' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='246.07' cy='375.44' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='358.47' cy='449.29' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='345.01' cy='507.76' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='346.74' cy='66.24' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='65.14' cy='125.40' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='316.56' cy='186.75' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='324.29' cy='257.32' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='236.01' cy='324.05' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='231.93' cy='382.65' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='321.08' cy='452.01' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+<circle cx='335.90' cy='509.16' r='2.27' style='stroke-width: 0.71; stroke: #00008B; stroke-opacity: 0.40; fill: #00008B; fill-opacity: 0.40;' />
+</g>
+<g clip-path='url(#cpMC4wMHw0MzIuMDB8MC4wMHw1NzYuMDA=)'>
+<polyline points='58.69,545.10 58.69,22.78 ' style='stroke-width: 1.07; stroke-linecap: square;' />
+<text x='53.76' y='509.91' text-anchor='end' style='font-size: 8.80px; font-style: italic; font-family: "Arimo";' textLength='29.34px' lengthAdjust='spacingAndGlyphs'>PD_3.5</text>
+<text x='53.76' y='446.21' text-anchor='end' style='font-size: 8.80px; font-style: italic; font-family: "Arimo";' textLength='29.34px' lengthAdjust='spacingAndGlyphs'>PD_1.3</text>
+<text x='53.76' y='382.52' text-anchor='end' style='font-size: 8.80px; font-style: italic; font-family: "Arimo";' textLength='30.31px' lengthAdjust='spacingAndGlyphs'>PM_3.1</text>
+<text x='53.76' y='318.82' text-anchor='end' style='font-size: 8.80px; font-style: italic; font-family: "Arimo";' textLength='30.31px' lengthAdjust='spacingAndGlyphs'>PM_1.1</text>
+<text x='53.76' y='255.12' text-anchor='end' style='font-size: 8.80px; font-style: italic; font-family: "Arimo";' textLength='35.67px' lengthAdjust='spacingAndGlyphs'>WT_12.2</text>
+<text x='53.76' y='191.42' text-anchor='end' style='font-size: 8.80px; font-style: italic; font-family: "Arimo";' textLength='30.78px' lengthAdjust='spacingAndGlyphs'>WT_9.2</text>
+<text x='53.76' y='127.73' text-anchor='end' style='font-size: 8.80px; font-style: italic; font-family: "Arimo";' textLength='19.06px' lengthAdjust='spacingAndGlyphs'>mst7</text>
+<text x='53.76' y='64.03' text-anchor='end' style='font-size: 8.80px; font-style: italic; font-family: "Arimo";' textLength='25.27px' lengthAdjust='spacingAndGlyphs'>Guy11</text>
+<polyline points='55.95,506.88 58.69,506.88 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='55.95,443.19 58.69,443.19 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='55.95,379.49 58.69,379.49 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='55.95,315.79 58.69,315.79 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='55.95,252.09 58.69,252.09 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='55.95,188.39 58.69,188.39 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='55.95,124.70 58.69,124.70 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='55.95,61.00 58.69,61.00 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='58.69,545.10 426.52,545.10 ' style='stroke-width: 1.07; stroke-linecap: square;' />
+<polyline points='65.14,547.84 65.14,545.10 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='153.14,547.84 153.14,545.10 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='241.14,547.84 241.14,545.10 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='329.14,547.84 329.14,545.10 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='417.13,547.84 417.13,545.10 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<text x='65.14' y='556.09' text-anchor='middle' style='font-size: 8.80px; font-family: "Arimo";' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text x='153.14' y='556.09' text-anchor='middle' style='font-size: 8.80px; font-family: "Arimo";' textLength='9.78px' lengthAdjust='spacingAndGlyphs'>30</text>
+<text x='241.14' y='556.09' text-anchor='middle' style='font-size: 8.80px; font-family: "Arimo";' textLength='9.78px' lengthAdjust='spacingAndGlyphs'>60</text>
+<text x='329.14' y='556.09' text-anchor='middle' style='font-size: 8.80px; font-family: "Arimo";' textLength='9.78px' lengthAdjust='spacingAndGlyphs'>90</text>
+<text x='417.13' y='556.09' text-anchor='middle' style='font-size: 8.80px; font-family: "Arimo";' textLength='14.67px' lengthAdjust='spacingAndGlyphs'>120</text>
+<text x='242.60' y='568.23' text-anchor='middle' style='font-size: 11.00px; font-family: "Arimo";' textLength='174.91px' lengthAdjust='spacingAndGlyphs'>Germtubes forming appressoria (%)</text>
+<text transform='translate(13.05,283.94) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: "Arimo";' textLength='47.75px' lengthAdjust='spacingAndGlyphs'>Genotype</text>
+<text x='58.69' y='14.56' style='font-size: 13.20px; font-family: "Arimo";' textLength='200.02px' lengthAdjust='spacingAndGlyphs'>Appressoria Formation Phenotype</text>
+</g>
+</g>
+</svg>
