@@ -1,0 +1,163 @@
+target_id,gene_name,blast2go
+MGG_15150T0,NA,hypothetical protein MGG_15150
+MGG_07748T0,NA,hypothetical protein MGG_07748
+MGG_02647T0,NA,uvi-1 protein
+MGG_04538T0,NA,hypothetical protein OOU_Y34scaffold00619g28
+EFMOT00000000112,NA,NA
+MGG_08655T0,NA,hypothetical protein MGG_08655
+MGG_07793T0,NA,short-chain dehydrogenase reductase family
+MGG_09081T0,NA,cytochrome p450
+MGG_01778T0,NA,aflatoxin efflux pump
+EFMOT00000000054,NA,NA
+MGG_15267T0,NA,proline-rich antigen
+MGG_04963T0,NA,---NA---
+MGG_15918T0,NA,hypothetical protein MGG_15918
+MGG_16109T0,NA,hypothetical protein MGG_16109
+MGG_06347T0,NA,hypothetical protein OOU_Y34scaffold00095g33
+EFMOT00000000215,NA,NA
+MGG_04328T0,ZFP10,metallothionein expression activator
+MGG_08589T0,NA,alpha beta-hydrolase protein
+MGG_03110T0,NA,alkyl hydroperoxide reductase subunit c thiol specific antioxidant protein
+MGG_16516T0,NA,hypothetical protein MGG_16516
+MGG_04251T0,NA,sodium phosphate
+MGG_16892T0,NA,hypothetical protein MGG_16892
+MGG_16502T0,NA,NA
+MGG_08287T1,NA,"hypothetical protein, variant"
+MGG_03575T0,NA,integral membrane protein
+MGG_16379T0,NA,hypothetical protein MGG_16379
+MGG_09918T0,NA,glycoside hydrolase family 16 protein
+MGG_00757T0,NA,cell division control protein 14
+MGG_16229T0,NA,hypothetical protein MGG_16229
+MGG_17787T0,NA,cyclic nucleotide-binding domain-containing protein
+MGG_04850T0,NA,integral membrane protein
+MGG_04598T0,NA,hypothetical protein MGG_04598
+MGG_17926T0,NA,hypothetical protein MGG_17926
+MGG_05723T0,NA,fluconazole resistance protein 1
+MGG_14198T0,NA,integral membrane protein
+MGG_01236T0,NA,wd repeat-containing protein slp1
+MGG_03350T0,NA,cu zn superoxide dismutase
+MGG_16695T0,NA,NA
+MGG_00400T0,NA,hypothetical protein MGG_00400
+MGG_16541T0,NA,NA
+MGG_06383T0,NA,dsba-like thioredoxin domain-containing protein
+MGG_04956T0,UBP4,amp-binding enzyme
+MGG_07522T0,NA,peptidoglycan binding domain-containing protein
+MGG_15350T0,NA,hypothetical protein MGG_15350
+MGG_08761T0,NA,peptidase s41 family protein
+MGG_18030T0,NA,hypothetical protein MGG_18030
+MGG_18048T0,NA,hypothetical protein MGG_18048
+MGG_09159T0,CBL1,carbohydrate esterase family 4 protein
+EFMOT00000000339,NA,NA
+MGG_15377T0,NA,hypothetical protein MGG_15377
+MGG_17475T0,NA,hypothetical protein MGG_17475
+MGG_08497T0,NA,coagulation factor 5 8 type domain-containing protein
+MGG_17279T0,NA,hypothetical protein MGG_17279
+MGG_17521T0,NA,duf1237 domain-containing protein
+MGG_14209T0,NA,integral membrane protein
+MGG_17833T0,NA,hypothetical protein MGG_17833
+MGG_15662T0,NA,"hypothetical protein MGG_15662, partial"
+MGG_11179T0,NA,hypothetical protein MGG_11179
+MGG_15982T0,NA,hypothetical protein MGG_15982
+MGG_07733T0,NA,clock-controlled pheromone ccg-4
+MGG_17526T0,NA,hypothetical protein MGG_17526
+MGG_16911T0,NA,hypothetical protein MGG_16911
+MGG_10061T0,NA,catalase 1
+MGG_14718T0,NA,hypothetical protein MGG_14718
+MGG_14719T0,VELC,vea protein
+MGG_17006T0,NA,"hypothetical protein MGG_17006, partial"
+MGG_17527T0,NA,hypothetical protein MGG_17527
+MGG_07548T0,NA,major facilitator superfamily
+MGG_15499T0,NA,hypothetical protein MGG_15499
+MGG_07443T0,NA,short chain dehydrogenase reductase family protein
+MGG_04583T0,NA,hypothetical protein MGG_04583
+MGG_08260T0,NA,hypothetical protein MGG_08260
+MGG_01007T0,NA,hypothetical protein MGG_01007
+MGG_10733T0,NA,hypothetical protein MGG_10733
+MGG_15628T1,NA,hypothetical protein MGG_15628
+MGG_10727T0,NA,hypothetical protein MGG_10727
+MGG_16723T0,NA,NA
+MGG_05044T0,ABC6,abc multidrug transporter
+MGG_12176T0,NA,cytoplasmic protein
+MGG_15115T0,NA,hypothetical protein MGG_15115
+MGG_00675T0,NA,hypothetical protein MGG_00675
+MGG_07930T0,NA,protein
+MGG_03871T0,NA,hypothetical protein MGG_03871
+MGG_13026T0,NA,hypothetical protein MGG_13026
+MGG_00816T0,NA,hypothetical protein MGG_00816
+MGG_09417T0,NA,low affinity copper transporter
+MGG_07369T0,NA,hypothetical protein MGG_07369
+MGG_11925T0,ZFP14,transcription factor stea
+MGG_10728T0,NA,hypothetical protein MGG_10728
+MGG_00194T0,NA,protein rds1
+MGG_14371T0,CDIP13,hypothetical protein MGG_14371
+EFMOT00000000337,NA,NA
+MGG_10497T0,NA,protein bli-3
+MGG_09461T0,NA,uv-damage endonuclease
+MGG_04329T0,NA,mfs transporter
+MGG_08026T0,NA,hypothetical protein MGG_08026
+MGG_01094T0,NA,meiotically up-regulated protein
+MGG_15347T0,NA,glucose-methanol-choline oxidoreductase:gmc oxidoreductase
+MGG_10931T0,NA,hypothetical protein MGCH7_ch7g161
+MGG_10453T0,NA,l-lactate dehydrogenase
+MGG_09445T0,NA,c2 domain-containing protein
+MGG_08846T0,NA,flavin-containing amine
+MGG_08535T0,NA,integral membrane protein
+MGG_14099T0,NA,prostacyclin synthase
+MGG_17137T0,NA,hypothetical protein MGG_17137
+MGG_04563T0,NA,zinc finger mynd-type protein
+MGG_08455T0,NA,fad binding domain-containing protein
+MGG_00265T0,NA,5 -p- -4-tetraphosphate phosphorylase 2
+MGG_00016T0,NA,2-epi-5-epi-valiolone synthase
+MGG_12230T0,NA,allantoate permease
+MGG_08074T0,NA,nadp-specific glutamate dehydrogenase
+MGG_01569T0,YCP4,minor allergen alt a 7
+MGG_17446T0,NA,hypothetical protein MGG_17446
+MGG_10921T0,NA,btb poz domain-containing protein
+MGG_02817T0,GLD1,glutamate decarboxylase
+MGG_02805T0,NA,hypothetical protein MGG_02805
+MGG_10088T0,NA,adp-ribose 1 -phosphate phosphatase
+MGG_18120T0,NA,hypothetical protein MGCH7_ch7g1035
+MGG_03272T0,NA,bile acid 7-alpha protein
+MGG_12983T0,NA,short chain dehydrogenase
+MGG_01069T0,NA,mitochondrial carrier protein pet8
+MGG_05250T0,NA,hypothetical protein MGG_05250
+MGG_10277T0,NA,brefeldin a resistance protein
+MGG_15964T0,NA,NA
+MGG_14702T0,NA,hypothetical protein MGG_14702
+MGG_04378T0,NA,integral membrane protein
+MGG_09260T0,NA,integral membrane protein
+MGG_17169T0,NA,mitochondrial inner membrane protein 1 protein
+MGG_17360T0,NA,hypothetical protein MGG_17360
+MGG_10431T0,NA,extracellular cell wall glucanase crf1 allergen asp f9
+MGG_16493T0,NA,NA
+MGG_03336T0,NA,lea domain-containing protein
+EFMOT00000000114,NA,NA
+MGG_15501T0,NA,hypothetical protein MGG_15501
+MGG_18007T0,NA,hypothetical protein MGG_18007
+MGG_04344T0,NA,hypothetical protein MGG_04344
+MGG_17338T0,NA,hypothetical protein MGG_17338
+MGG_18106T0,NA,exopolygalacturonase
+MGG_03067T0,NA,heavy polypeptide smooth muscle
+MGG_02224T0,NA,succinate-semialdehyde dehydrogenase
+MGG_14098T0,NA,p-loop containing nucleoside triphosphate hydrolase protein
+MGG_08436T0,NA,minor extracellular protease vpr
+MGG_16823T0,NA,hypothetical protein MGG_16823
+MGG_06747T0,NA,glutathione s-transferase
+MGG_00268T1,NA,hypothetical protein MGG_00268
+MGG_16755T0,NA,zn 2cys6 transcription factor
+MGG_16709T0,MGG_16709,mfs transporter
+MGG_15743T0,NA,hypothetical protein MGG_15743
+MGG_06452T0,NA,pheromone receptor
+MGG_00268T0,NA,hypothetical protein MGG_00268
+MGG_11445T1,NA,"hypothetical protein, variant"
+MGG_02268T0,NA,alpha- -
+MGG_08439T0,NA,hypothetical protein MGG_08439
+MGG_16056T0,NA,NA
+MGG_10560T0,NA,tpa: arylamine n-acetyltransferase 1
+MGG_02886T0,NA,s- glutathione dehydrogenase
+MGG_02641T0,RRT8,protein family protein
+MGG_13654T0,NA,hypothetical protein MGG_13654
+MGG_16376T0,NA,hypothetical protein MGG_16376
+MGG_10730T0,NA,potassium sodium efflux p-type atpase
+MGG_17373T0,NA,nima interactive protein
+MGG_01679T0,NA,family protein

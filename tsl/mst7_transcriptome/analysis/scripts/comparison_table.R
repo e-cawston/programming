@@ -9,6 +9,7 @@ comparisons <- tribble(
   "MST7WT_vs_mst7",     "Exp1",      "MST7WT",  "mst7",
   "MST7WT_vs_PM",       "Exp1",      "MST7WT",  "MST7PM",
   "MST7WT_vs_PD",       "Exp1",      "MST7WT",  "MST7PD",
+  "PM_vs_PD",           "Exp1",      "MST7PM",  "MST7PD",
 
   # Exp2 core comparison
   "Guy11M_vs_pmk1",     "Exp2",      "Guy11M",  "pmk1",

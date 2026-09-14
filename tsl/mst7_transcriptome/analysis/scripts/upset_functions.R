@@ -69,8 +69,9 @@ plot_upset <- function(deg_list,
 
   all_genes <- unique(unlist(deg_list, use.names = FALSE))
 
+  # UpSetR::upset() requires binary 0/1 indicator columns, not logicals.
   mat <- map_dfc(names(deg_list), function(nm) {
-    tibble(!!nm := all_genes %in% deg_list[[nm]])
+    tibble(!!nm := as.integer(all_genes %in% deg_list[[nm]]))
   })
 
   mat <- bind_cols(tibble(gene = all_genes), mat)
@@ -79,13 +80,16 @@ plot_upset <- function(deg_list,
   png(file.path(out_dir, paste0("upset_", label, ".png")),
       width = 1800, height = 1200, res = 180)
 
-  upset(
+  # upset() builds a grid plot object but only draws it when print()ed;
+  # called from inside a function that never happens automatically, so the
+  # png() device would otherwise close on a blank canvas.
+  print(upset(
     df,
     nsets = length(deg_list),
     sets = names(deg_list),
     order.by = "freq",
     keep.order = TRUE
-  )
+  ))
 
   dev.off()
 

@@ -1,0 +1,4 @@
+category,category_size,observed_overlap,expected_overlap,fold_enrichment,p_value
+Shared,28,0,0.052603892688058915,0,1
+PM-only,66,15,0.12399488990756745,120.97272727272727,1.5352665512089036e-29
+PD-only,9,0,0.01690839407830465,0,1

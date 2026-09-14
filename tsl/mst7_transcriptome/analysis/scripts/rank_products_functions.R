@@ -21,6 +21,8 @@ library(here)
 library(ggplot2)
 suppress_library_error('RankProd')
 
+source(file.path(here("analysis", "scripts"), "label_functions.R"))
+
 # If RankProd didn't load, use stub functions
 if (!exists('RP')) {
   source(file.path(here('analysis'), 'scripts', 'stub_functions.R'), local = TRUE)
@@ -71,8 +73,11 @@ run_rank_products_comparison <- function(s2c,
     return(tibble())
   }
 
-  expr_mat <- build_tpm_matrix_from_samples(s2c_sub) %>%
-    log2(. + 0.5)
+  # NOTE: `%>% log2(. + 0.5)` would pass 2 arguments to log2() -- magrittr
+  # inserts the LHS as the first argument *in addition to* substituting `.`
+  # whenever `.` appears only nested inside another call (here, inside `+`).
+  expr_mat <- build_tpm_matrix_from_samples(s2c_sub)
+  expr_mat <- log2(expr_mat + 0.5)
 
   n1 <- sum(s2c_sub$name == group1)
   n2 <- sum(s2c_sub$name == group2)
@@ -169,42 +174,101 @@ run_rank_products_comparisons <- function(s2c,
   bind_rows(results)
 }
 
+# Unique DEGs from a rank products result table (pools both "up in group1"
+# and "up in group2" rows, i.e. both directions of one comparison).
+extract_rank_product_deg_ids <- function(rp_table, pfp_threshold = 0.05) {
+  rp_table %>%
+    filter(pfp <= pfp_threshold) %>%
+    pull(target_id) %>%
+    unique()
+}
+
+# Rank-products equivalent of upset_functions.R::load_deg_tables() -- reads
+# the per-timepoint rankprod_<label>_<tp>H.csv files already written by
+# run_rank_products_comparisons() and returns one DEG set per comparison
+# label, pooled across timepoints. Use this (instead of the sleuth-based
+# loader) for comparisons that cross experiments/batches, where sleuth's
+# shared-normalisation model isn't appropriate but rank products' per-
+# replicate ranking still is.
+load_rank_product_deg_tables <- function(comparison_labels,
+                                         rp_dir = here("results", "rank_products"),
+                                         pfp_threshold = 0.05) {
+  deg_list <- map(comparison_labels, function(label) {
+    files <- list.files(
+      rp_dir,
+      pattern = paste0("^rankprod_", label, "_.*H\\.csv$"),
+      full.names = TRUE
+    )
+
+    if (length(files) == 0) {
+      message("No rank products files found for: ", label)
+      return(NULL)
+    }
+
+    deg_ids <- map(files, function(f) {
+      tbl <- read_csv(f, show_col_types = FALSE)
+      extract_rank_product_deg_ids(tbl, pfp_threshold)
+    })
+
+    unique(unlist(deg_ids, use.names = FALSE))
+  })
+
+  names(deg_list) <- comparison_labels
+  purrr::compact(deg_list)
+}
+
 plot_rank_products_mirrored <- function(rp_table,
                                         comparison_label,
                                         out_dir = here("results", "figures", "rank_products"),
-                                        pfp_threshold = 0.05) {
+                                        pfp_threshold = 0.05,
+                                        display_label = comparison_label) {
   dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
   plot_df <- rp_table %>%
     filter(comparison_label == !!comparison_label) %>%
     filter(pfp <= pfp_threshold) %>%
-    mutate(
-      direction_label = if_else(direction == paste0("up_in_", group1), "up", "down"),
-      timepoint_num = suppressWarnings(as.numeric(str_remove(timepoint, "H")))
-    ) %>%
+    mutate(direction_label = if_else(direction == paste0("up_in_", group1), "up", "down")) %>%
     count(timepoint, direction_label, name = "n") %>%
+    # timepoint_num must be derived after count() -- count() drops every
+    # column that isn't a grouping var, so computing it beforehand (and
+    # relying on it surviving into this mutate) silently loses the column.
     mutate(
       n_plot = if_else(direction_label == "down", -n, n),
-      timepoint = forcats::fct_reorder(timepoint, timepoint_num, .desc = FALSE)
+      timepoint_num = suppressWarnings(as.numeric(str_remove(as.character(timepoint), "H"))),
+      timepoint = forcats::fct_reorder(as.character(timepoint), timepoint_num, .desc = FALSE)
     )
 
   if (nrow(plot_df) == 0) {
     return(NULL)
   }
 
+  # Total unique DEGs across all timepoints (a gene hitting threshold at
+  # more than one timepoint is only counted once here, unlike the sum of
+  # the per-bar counts, which counts per-timepoint events).
+  n_unique <- rp_table %>%
+    filter(comparison_label == !!comparison_label, pfp <= pfp_threshold) %>%
+    pull(target_id) %>%
+    n_distinct()
+
   p <- ggplot(plot_df, aes(x = n_plot, y = timepoint, fill = direction_label)) +
     geom_col(width = 0.7) +
     geom_vline(xintercept = 0, linewidth = 0.5) +
+    geom_text(
+      aes(label = n, hjust = if_else(direction_label == "down", 1.15, -0.15)),
+      size = 3.2
+    ) +
     scale_fill_manual(values = c(up = "#D62728", down = "#1F77B4")) +
-    scale_x_continuous(labels = abs) +
+    scale_x_continuous(labels = abs, expand = expansion(mult = 0.12)) +
     labs(
-      title = paste("Rank products:", comparison_label),
+      title = strain_nomenclature_title(display_label, prefix = "Rank products: "),
       subtitle = paste0("pfp < ", pfp_threshold),
       x = "Number of DEGs",
       y = "Timepoint",
-      fill = NULL
+      fill = NULL,
+      caption = paste0("Total unique DEGs across all timepoints: ", n_unique)
     ) +
-    theme_classic(base_size = 12)
+    theme_classic(base_size = 12) +
+    theme(plot.caption = element_text(hjust = 0.5, size = 10, face = "italic"))
 
   out_file <- file.path(out_dir, paste0("rankprod_mirrored_", comparison_label, ".png"))
   ggsave(out_file, p, width = 8, height = 5, dpi = 300)

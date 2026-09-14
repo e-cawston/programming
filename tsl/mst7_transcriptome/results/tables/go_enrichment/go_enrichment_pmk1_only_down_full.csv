@@ -1,0 +1,50 @@
+go_id,go_name,go_namespace,term_size,overlap_genes,overlap,expected,fold_enrichment,p_value,p_adjust,tier
+GO:0098869,cellular oxidant detoxification,biological_process,28,MGG_06383T0/MGG_03110T0,2,0.13466596528143082,14.8515625,0.00794143786223515,1,borderline
+GO:0010997,anaphase-promoting complex binding,molecular_function,3,MGG_01236T0,1,0.014428496280153302,69.30729166666667,0.014360287703375163,1,borderline
+GO:0097027,ubiquitin-protein transferase activator activity,molecular_function,3,MGG_01236T0,1,0.014428496280153302,69.30729166666667,0.014360287703375163,1,borderline
+GO:1904668,positive regulation of ubiquitin protein ligase activity,biological_process,3,MGG_01236T0,1,0.014428496280153302,69.30729166666667,0.014360287703375163,1,borderline
+GO:0005618,cell wall,cellular_component,45,MGG_15267T0/MGG_09918T0,2,0.21642744420229953,9.240972222222222,0.019739489731200537,1,borderline
+GO:0004364,glutathione transferase activity,molecular_function,5,MGG_06383T0,1,0.024047493800255504,41.584375,0.023820836868898798,1,borderline
+GO:0006749,glutathione metabolic process,biological_process,5,MGG_06383T0,1,0.024047493800255504,41.584375,0.023820836868898798,1,borderline
+GO:0006817,phosphate ion transport,biological_process,6,MGG_04251T0,1,0.028856992560306605,34.653645833333336,0.02851753409039859,1,borderline
+GO:0015293,symporter activity,molecular_function,7,MGG_04251T0,1,0.033666491320357705,29.703125,0.03319198547136304,1,borderline
+GO:0016209,antioxidant activity,molecular_function,7,MGG_03110T0,1,0.033666491320357705,29.703125,0.03319198547136304,1,borderline
+GO:0004784,superoxide dismutase activity,molecular_function,8,MGG_03350T0,1,0.038475990080408806,25.990234375,0.03784429471420736,1,borderline
+GO:0006801,superoxide metabolic process,biological_process,8,MGG_03350T0,1,0.038475990080408806,25.990234375,0.03784429471420736,1,borderline
+GO:0009277,fungal-type cell wall,cellular_component,8,MGG_09918T0,1,0.038475990080408806,25.990234375,0.03784429471420736,1,borderline
+GO:0110165,cellular anatomical structure,cellular_component,65,MGG_04251T0/MGG_17373T0,2,0.31261741940332155,6.397596153846154,0.039014361702406214,1,borderline
+GO:0000131,incipient cellular bud site,cellular_component,9,MGG_09918T0,1,0.04328548884045991,23.102430555555557,0.04247456504568348,1,borderline
+GO:0005315,phosphate transmembrane transporter activity,molecular_function,9,MGG_04251T0,1,0.04328548884045991,23.102430555555557,0.04247456504568348,1,borderline
+GO:0043231,intracellular membrane-bounded organelle,cellular_component,13,MGG_06383T0,1,0.06252348388066431,15.993990384615385,0.060777305264616444,1,not significant
+GO:0031505,fungal-type cell wall organization,biological_process,14,MGG_09918T0,1,0.06733298264071541,14.8515625,0.06529891294199408,1,not significant
+GO:0015035,protein-disulfide reductase activity,molecular_function,16,MGG_06383T0,1,0.07695198016081761,12.9951171875,0.07427793999260479,1,not significant
+GO:0016810,"hydrolase activity, acting on carbon-nitrogen (but not peptide) bonds",molecular_function,30,MGG_09159T0,1,0.14428496280153302,6.930729166666667,0.13479712601702454,1,not significant
+GO:0034599,cellular response to oxidative stress,biological_process,30,MGG_03110T0,1,0.14428496280153302,6.930729166666667,0.13479712601702454,1,not significant
+GO:0008061,chitin binding,molecular_function,34,MGG_09159T0,1,0.16352295784173743,6.115349264705882,0.15136112658626744,1,not significant
+GO:0022857,transmembrane transporter activity,molecular_function,293,MGG_01778T0/MGG_05723T0/MGG_04850T0,3,1.4091831366949725,2.1288929180887375,0.16674730446521394,1,not significant
+GO:0055085,transmembrane transport,biological_process,477,MGG_01778T0/MGG_05723T0/MGG_04850T0/MGG_04251T0,4,2.2941309085443753,1.7435796645702304,0.19642864638109472,1,not significant
+GO:0005975,carbohydrate metabolic process,biological_process,324,MGG_17521T0/MGG_09159T0/MGG_09918T0,3,1.5582775982565567,1.9252025462962963,0.2042113269194033,1,not significant
+GO:0008236,serine-type peptidase activity,molecular_function,55,MGG_08761T0,1,0.26452243180281054,3.7803977272727276,0.23333196529366063,1,not significant
+GO:0051301,cell division,biological_process,58,MGG_00757T0,1,0.27895092808296384,3.5848599137931036,0.24438701445394473,1,not significant
+GO:0016757,glycosyltransferase activity,molecular_function,97,MGG_09918T0,1,0.4665213797249568,2.1435244845360826,0.37458886496402777,1,not significant
+GO:0016020,membrane,cellular_component,2417,MGG_00400T0/MGG_01778T0/MGG_17833T0/MGG_05723T0/MGG_15267T0/MGG_04538T0/MGG_08287T1/MGG_04251T0/MGG_15377T0/MGG_04963T0/MGG_14198T0/MGG_08761T0/MGG_03575T0,13,11.624558503043511,1.1183220417873396,0.3761199834768653,1,not significant
+GO:0016705,"oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen",molecular_function,148,MGG_09081T0,1,0.7118058164875629,1.4048775337837838,0.5120308752153597,1,not significant
+GO:0016798,"hydrolase activity, acting on glycosyl bonds",molecular_function,154,MGG_09918T0,1,0.7406628090478695,1.3501420454545454,0.5261011894575237,1,not significant
+GO:0004553,"hydrolase activity, hydrolyzing O-glycosyl compounds",molecular_function,164,MGG_09918T0,1,0.7887577966483805,1.2678163109756098,0.5486693517664977,1,not significant
+GO:0004497,monooxygenase activity,molecular_function,167,MGG_09081T0,1,0.8031862929285338,1.2450411676646707,0.5552310750788931,1,not significant
+GO:0016491,oxidoreductase activity,molecular_function,829,MGG_03350T0/MGG_07793T0/MGG_06383T0/MGG_03110T0,4,3.9870744720823628,1.0032418576598312,0.570691016927177,1,not significant
+GO:0005576,extracellular region,cellular_component,180,MGG_15267T0,1,0.8657097768091981,1.1551215277777778,0.5825966624928931,1,not significant
+GO:0020037,heme binding,molecular_function,182,MGG_09081T0,1,0.8753287743293003,1.1424278846153846,0.5866569512614241,1,not significant
+GO:0009055,electron transfer activity,molecular_function,184,MGG_09081T0,1,0.8849477718494025,1.1300101902173914,0.5906783548102725,1,not significant
+GO:0005506,iron ion binding,molecular_function,199,MGG_09081T0,1,0.957090253250169,1.0448335427135678,0.6196358612450245,1,not significant
+GO:0006508,proteolysis,biological_process,238,MGG_08761T0,1,1.144660704892162,0.8736213235294118,0.6858198020585111,1,not significant
+GO:0003824,catalytic activity,molecular_function,766,MGG_17521T0/MGG_09159T0/MGG_04956T0,3,3.684076050199143,0.8143154373368147,0.7210361117383517,1,not significant
+GO:0008152,metabolic process,biological_process,839,MGG_17521T0/MGG_07793T0/MGG_04956T0,3,4.035169459682874,0.743463200238379,0.7771822375648726,1,not significant
+GO:0005515,protein binding,molecular_function,627,MGG_17787T0/MGG_01236T0,2,3.0155557225520404,0.6632276714513556,0.8109993516840099,1,not significant
+GO:0003676,nucleic acid binding,molecular_function,383,MGG_04328T0,1,1.8420380250995716,0.5428769582245431,0.8464256905860084,1,not significant
+GO:0005622,intracellular anatomical structure,cellular_component,436,MGG_04328T0,1,2.09694145938228,0.47688503440366975,0.8820167068646755,1,not significant
+GO:0005737,cytoplasm,cellular_component,618,MGG_06383T0,1,2.9722702337115803,0.33644316343042074,0.9526839540895543,1,not significant
+GO:0016740,transferase activity,molecular_function,646,MGG_06383T0,1,3.106936198993011,0.3218604876160991,0.9589366412915925,1,not significant
+GO:0008270,zinc ion binding,molecular_function,683,MGG_04328T0,1,3.284887653114902,0.3044244143484627,0.9659665763199204,1,not significant
+GO:0046872,metal ion binding,molecular_function,937,MGG_03350T0,1,4.506500338167881,0.22190168089647813,0.9907630121253787,1,not significant
+GO:0000166,nucleotide binding,molecular_function,1048,MGG_07793T0,1,5.040354700533554,0.1983987356870229,0.9948197658123216,1,not significant

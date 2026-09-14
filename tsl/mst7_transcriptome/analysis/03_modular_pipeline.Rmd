@@ -71,6 +71,7 @@ safe_source(file.path(scripts_dir, "upset_functions.R"))
 safe_source(file.path(scripts_dir, "correlation_functions.R"))
 safe_source(file.path(scripts_dir, "dge_functions.R"))
 safe_source(file.path(scripts_dir, "rank_products_functions.R"))
+safe_source(file.path(scripts_dir, "diagnostics_functions.R"))
 cat("Scripts sourced successfully.\n")
 ```
 
@@ -88,6 +89,22 @@ s2c <- read_csv(file.path(project_dir, "raw", "run_metadata.txt"), show_col_type
     experiment = if_else(name %in% c("pmk1", "Guy11M"), "Exp2", "Exp1"),
     experiment = factor(experiment, levels = c("Exp1", "Exp2"))
   )
+```
+
+Sleuth's shared-normalisation model assumes all samples come from one
+coherent experiment; it isn't appropriate for the "Cross" comparisons in
+`comparisons`, which compare samples sequenced in different experiments/
+batches (Exp1 vs Exp2), so those use rank products instead for anything
+that draws a conclusion (upset plots, gene lists) -- rank products ranks
+within each replicate and doesn't depend on cross-batch normalisation.
+Sleuth is still run and plotted for the cross-experiment comparisons too,
+purely so the two methods' results can be compared side by side; treat
+its cross-experiment numbers as illustrative of the batch-normalisation
+problem, not as a result to draw conclusions from.
+
+```{r comparison-groups}
+within_exp_labels <- comparisons %>% filter(experiment != "Cross") %>% pull(label)
+cross_exp_labels <- comparisons %>% filter(experiment == "Cross") %>% pull(label)
 ```
 
 # Sleuth differential expression
@@ -112,7 +129,10 @@ if (exists('dge_results') && nrow(dge_results) > 0) {
     {
       for (lab in unique(dge_results$comparison_label)) {
         if (!is.na(lab) && nzchar(lab)) {
-          plot_dge_summary(dge_results, lab, out_dir = fig_dir)
+          # Relabelled unconditionally (not just for the Cross-category
+          # comparisons) -- "Guy11M" is misleading on its own, not only
+          # when a bare "Guy11" also appears in the same title.
+          plot_dge_summary_both_directions(dge_results, lab, out_dir = fig_dir, display_label = relabel_cross_experiment_comparison(lab))
         }
       }
     },
@@ -130,23 +150,44 @@ if (exists('dge_results') && nrow(dge_results) > 0) {
 ```{r upset-plots}
 tryCatch(
   {
-    cat("\nGenerating upset plots...\n")
+    cat("\nGenerating upset plot for within-experiment (sleuth) comparisons...\n")
     deg_sets <- load_deg_tables(
-      comparison_labels = comparisons$label,
+      comparison_labels = within_exp_labels,
       dge_dir = dge_dir,
       qval_threshold = 0.05,
       fc_threshold = 0
     )
-    
+
     if (length(deg_sets) > 0) {
-      plot_upset(deg_sets, label = "all_comparisons", out_dir = upset_dir)
-      cat("Upset plots completed.\n")
+      plot_upset(deg_sets, label = "within_experiment_sleuth", out_dir = upset_dir)
+      cat("Sleuth upset plot completed.\n")
     } else {
-      cat("No DEG sets found for upset plots.\n")
+      cat("No DEG sets found for sleuth upset plot.\n")
     }
   },
   error = function(e) {
-    warning("Upset plot generation failed: ", e$message)
+    warning("Sleuth upset plot generation failed: ", e$message)
+  }
+)
+
+tryCatch(
+  {
+    cat("\nGenerating upset plot for cross-experiment (rank products) comparisons...\n")
+    cross_deg_sets <- load_rank_product_deg_tables(
+      comparison_labels = cross_exp_labels,
+      rp_dir = file.path(results_dir, "rank_products"),
+      pfp_threshold = 0.05
+    )
+
+    if (length(cross_deg_sets) > 0) {
+      plot_upset(cross_deg_sets, label = "cross_experiment_rank_products", out_dir = upset_dir)
+      cat("Cross-experiment upset plot completed.\n")
+    } else {
+      cat("No DEG sets found for cross-experiment upset plot.\n")
+    }
+  },
+  error = function(e) {
+    warning("Cross-experiment upset plot generation failed: ", e$message)
   }
 )
 ```
@@ -159,11 +200,31 @@ tryCatch(
     cat("\nGenerating correlation matrices...\n")
     tpm_matrix <- load_tpm_matrix(file.path(project_dir, "raw", "all_samples_tpm_matrix.txt"))
     
+    cat("Per-sample correlation matrices...\n")
     tryCatch(cor_matrix_all(tpm_matrix, s2c), error = function(e) warning("All samples correlation failed: ", e$message))
     tryCatch(cor_matrix_exp1(tpm_matrix, s2c), error = function(e) warning("Exp1 correlation failed: ", e$message))
     tryCatch(cor_matrix_exp2(tpm_matrix, s2c), error = function(e) warning("Exp2 correlation failed: ", e$message))
     tryCatch(cor_matrix_key_strains(tpm_matrix, s2c), error = function(e) warning("Key strains correlation failed: ", e$message))
-    
+
+    cat("Mean-of-bioreps-per-timepoint correlation matrices...\n")
+    mean_biorep <- collapse_bioreps(tpm_matrix, s2c)
+    tryCatch(
+      cor_matrix_all(mean_biorep$tpm_matrix, mean_biorep$s2c, label = "all_samples_mean_biorep"),
+      error = function(e) warning("All samples (mean biorep) correlation failed: ", e$message)
+    )
+    tryCatch(
+      cor_matrix_exp1(mean_biorep$tpm_matrix, mean_biorep$s2c, label = "Exp1_mean_biorep"),
+      error = function(e) warning("Exp1 (mean biorep) correlation failed: ", e$message)
+    )
+    tryCatch(
+      cor_matrix_exp2(mean_biorep$tpm_matrix, mean_biorep$s2c, label = "Exp2_mean_biorep"),
+      error = function(e) warning("Exp2 (mean biorep) correlation failed: ", e$message)
+    )
+    tryCatch(
+      cor_matrix_key_strains(mean_biorep$tpm_matrix, mean_biorep$s2c, label = "key_strains_mean_biorep"),
+      error = function(e) warning("Key strains (mean biorep) correlation failed: ", e$message)
+    )
+
     cat("Correlation matrices completed.\n")
   },
   error = function(e) {
@@ -188,7 +249,8 @@ tryCatch(
             plot_rank_products_mirrored(
               rp_results,
               lab,
-              out_dir = file.path(fig_dir, "rank_products")
+              out_dir = file.path(fig_dir, "rank_products"),
+              display_label = relabel_cross_experiment_comparison(lab)
             ),
             error = function(e) warning("Plot for ", lab, " failed: ", e$message)
           )
@@ -202,6 +264,103 @@ tryCatch(
   error = function(e) {
     warning("Rank products analysis failed (RankProd may not be installed): ", e$message)
   }
+)
+```
+
+# Diagnostics: is a DEG count more than chance?
+
+A small number of significant genes could be real, or it could be roughly
+what you'd expect from false discoveries alone. Under the null hypothesis
+that a comparison has *no* true differentially expressed genes, raw
+p-values are uniformly distributed on [0, 1] -- so exactly 5% are expected
+to fall below 0.05 by chance, no matter how many genes are tested. A
+binomial test of the observed count of p < 0.05 against that 5% chance
+expectation, plus the shape of the p-value histogram (flat = no real
+signal, spiked near zero = real signal), tells you whether a comparison's
+DEGs are distinguishable from noise.
+
+```{r diagnostics-sleuth}
+tryCatch(
+  {
+    cat("\nSleuth p-value enrichment diagnostics (within-experiment comparisons)...\n")
+    sleuth_pvals <- list()
+
+    for (lab in within_exp_labels) {
+      files <- list.files(dge_dir, pattern = paste0("^sleuth_", lab, "_.*H\\.csv$"), full.names = TRUE)
+      if (length(files) == 0) next
+      tbl <- map_dfr(files, read_csv, show_col_types = FALSE)
+      sleuth_pvals[[lab]] <- tbl$pval
+      plot_pvalue_histogram(tbl, lab, pval_col = "pval", out_dir = file.path(fig_dir, "diagnostics"))
+    }
+
+    if (length(sleuth_pvals) > 0) {
+      sleuth_enrichment <- compare_pvalue_enrichment(sleuth_pvals)
+      dir.create(file.path(tables_dir, "diagnostics"), recursive = TRUE, showWarnings = FALSE)
+      write_csv(sleuth_enrichment, file.path(tables_dir, "diagnostics", "pvalue_enrichment_sleuth.csv"))
+      print(sleuth_enrichment)
+    }
+  },
+  error = function(e) warning("Sleuth p-value diagnostics failed: ", e$message)
+)
+```
+
+```{r diagnostics-rank-products}
+tryCatch(
+  {
+    cat("\nRank products p-value enrichment diagnostics (all comparisons)...\n")
+    rp_pvals <- list()
+
+    for (lab in comparisons$label) {
+      files <- list.files(file.path(results_dir, "rank_products"), pattern = paste0("^rankprod_", lab, "_.*H\\.csv$"), full.names = TRUE)
+      if (length(files) == 0) next
+      tbl <- map_dfr(files, read_csv, show_col_types = FALSE)
+      rp_pvals[[lab]] <- tbl$P.value
+      plot_pvalue_histogram(tbl, paste0("rankprod_", lab), pval_col = "P.value", out_dir = file.path(fig_dir, "diagnostics"))
+    }
+
+    if (length(rp_pvals) > 0) {
+      rp_enrichment <- compare_pvalue_enrichment(rp_pvals)
+      dir.create(file.path(tables_dir, "diagnostics"), recursive = TRUE, showWarnings = FALSE)
+      write_csv(rp_enrichment, file.path(tables_dir, "diagnostics", "pvalue_enrichment_rank_products.csv"))
+      print(rp_enrichment)
+    }
+  },
+  error = function(e) warning("Rank products p-value diagnostics failed: ", e$message)
+)
+```
+
+# Gene lists: unique DEGs per comparison
+
+One file per comparison, listing the unique target IDs (MGG numbers) called
+differentially expressed. Within-experiment comparisons use the sleuth
+qval threshold; the cross-experiment comparisons use the rank products pfp
+threshold instead, for the same reason the upset plots above split them.
+
+```{r gene-lists}
+tryCatch(
+  {
+    gene_list_dir <- file.path(tables_dir, "deg_lists")
+    dir.create(gene_list_dir, recursive = TRUE, showWarnings = FALSE)
+
+    for (lab in within_exp_labels) {
+      files <- list.files(dge_dir, pattern = paste0("^sleuth_", lab, "_.*H\\.csv$"), full.names = TRUE)
+      if (length(files) == 0) next
+      tbl <- map_dfr(files, read_csv, show_col_types = FALSE)
+      ids <- extract_deg_ids(tbl, qval_threshold = 0.05, fc_threshold = 0)
+      write_csv(tibble(target_id = ids), file.path(gene_list_dir, paste0("degs_", lab, ".csv")))
+      cat(lab, ":", length(ids), "unique DEGs (sleuth)\n")
+    }
+
+    for (lab in cross_exp_labels) {
+      files <- list.files(file.path(results_dir, "rank_products"), pattern = paste0("^rankprod_", lab, "_.*H\\.csv$"), full.names = TRUE)
+      if (length(files) == 0) next
+      tbl <- map_dfr(files, read_csv, show_col_types = FALSE)
+      ids <- extract_rank_product_deg_ids(tbl, pfp_threshold = 0.05)
+      write_csv(tibble(target_id = ids), file.path(gene_list_dir, paste0("degs_", lab, ".csv")))
+      cat(lab, ":", length(ids), "unique DEGs (rank products)\n")
+    }
+  },
+  error = function(e) warning("Gene list export failed: ", e$message)
 )
 ```
 

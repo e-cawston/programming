@@ -1,0 +1,561 @@
+target_id,gene_name,blast2go
+MGG_06578T0,NA,hypothetical protein MGG_06578
+MGG_16371T0,NA,NA
+MGG_13716T0,NA,hypothetical protein MGG_13716
+MGG_11991T0,SPD10,hypothetical protein MGG_11991
+MGG_16189T0,NA,NA
+MGG_06126T0,NA,hypothetical protein MGG_06126
+MGG_10503T0,NA,mannitol-1-phosphate 5-dehydrogenase
+EFMOT00000000208,NA,NA
+MGG_06865T0,NA,hypothetical protein MGG_06865
+MGG_16956T0,NA,hypothetical protein MGG_16956
+MGG_09733T0,NA,secreted glucosidase
+MGG_14700T0,NA,hypothetical protein MGG_14700
+MGG_02840T0,NA,major facilitator superfamily transporter
+MGG_06116T0,NA,hypothetical protein MGG_06116
+MGG_16329T0,NA,hypothetical protein MGG_16329
+MGG_15401T0,NA,hypothetical protein MGG_15401
+MGG_01214T0,NA,hypothetical protein MGG_01214
+MGG_04967T0,NA,zinc-regulated transporter 2
+MGG_15695T0,NA,---NA---
+MGG_13711T0,NA,glycosyltransferase family 25
+MGG_13902T0,NA,hypothetical protein MGG_13902
+MGG_11774T0,NA,related to spore coat protein sp96 precursor
+MGG_14243T0,NA,endo- -beta-xylanase a
+MGG_16193T0,NA,NA
+MGG_05913T0,NA,hypothetical protein MGG_05913
+MGG_04030T0,NA,duf250 domain membrane protein
+MGG_03439T0,NA,acid phosphatase
+MGG_17030T0,NA,hypothetical protein MGG_17030
+MGG_07888T0,NA,heavy metal translocating p-type atpase
+MGG_14939T0,NA,hypothetical protein MGG_14939
+MGG_02235T0,NA,gibberellin 2-oxidase
+MGG_02239T0,HEG14,scytalone dehydratase
+MGG_03231T0,NA,monooxygenase fad-binding protein
+MGG_07214T0,NA,glycosyltransferase family 25
+MGG_17542T0,NA,opine oxidase subunit b
+MGG_04365T0,NA,hypothetical protein MGG_04365
+MGG_07887T0,NA,phenylacetone monooxygenase
+MGG_13529T0,NA,hypothetical protein MGG_13529
+MGG_10115T0,NA,sh3 domain protein
+MGG_07024T0,NA,ph-response regulator
+MGG_09863T0,NA,cfem domain-containing protein
+MGG_08024T0,NA,hypothetical protein MGG_08024
+MGG_11610T0,BAS3,biotrophy-associated secreted protein 3
+MGG_03865T0,NA,hypothetical protein MGG_03865
+MGG_06845T0,NA,hypothetical protein MGG_06845
+MGG_01372T0,NA,hypothetical protein MGG_01372
+MGG_06577T0,NA,phenylacetone monooxygenase
+MGG_09377T0,NA,accumulation-associated protein
+MGG_10581T0,NA,integral membrane protein
+MGG_01425T0,NA,major facilitator superfamily transporter
+MGG_13651T0,NA,high-affinity glucose transporter
+MGG_07656T0,CSN1,glycoside hydrolase family 75 protein
+MGG_04838T0,NA,hypothetical protein MGG_04838
+MGG_17811T0,NA,hypothetical protein MGG_17811
+MGG_00246T0,NA,nadp-dependent alcohol dehydrogenase
+MGG_09548T0,NA,domain-containing protein
+MGG_09014T0,NA,3-beta hydroxysteroid dehydrogenase isomerase family
+MGG_02851T0,NA,ribosomal protein s17 protein
+MGG_16353T0,NA,hypothetical protein MGG_16353
+MGG_02236T0,NA,hypothetical protein MGG_02236
+MGG_07478T0,NA,lccl domain-containing protein
+MGG_07758T0,NA,hypothetical protein MGG_07758
+MGG_08300T0,NA,small secreted protein
+MGG_00871T0,NA,phosphatidylinositol transfer protein csr1
+MGG_08353T0,NA,hypothetical protein MGG_08353
+MGG_03437T0,NA,duf1479 domain protein
+MGG_06326T0,NA,vacuolar atp synthase 16 kda proteolipid subunit
+MGG_15955T0,NA,hypothetical protein MGG_15955
+MGG_17010T0,NA,hypothetical protein MGG_17010
+MGG_04335T0,NA,integral membrane protein
+MGG_03307T0,CVNH3,carbohydrate-binding module family 50 protein
+MGG_18044T0,NA,hypothetical protein MGG_18044
+MGG_07901T0,NA,hypothetical protein MGG_07901
+MGG_08428T0,NA,hypothetical protein MGG_08428
+MGG_11009T0,NA,cell wall protein
+MGG_11370T0,NA,integral membrane protein
+MGG_04911T0,NA,cytochrome p450 3a5
+MGG_09246T0,NA,serine protease
+MGG_13624T0,ABC1,abc transporter cdr4
+MGG_06084T0,NA,integral membrane protein
+MGG_00750T0,NOX1,nadph oxidase
+MGG_12714T0,NA,nad -binding protein
+MGG_07690T0,NA,hypothetical protein MGG_07690
+MGG_11813T0,NA,flagellar basal body rod modification protein
+MGG_00721T0,NA,phosphatidylethanolamine-binding protein pebp protein
+MGG_04852T0,NA,phospholipid-transporting atpase 1
+MGG_04775T0,NA,polyketide synthase
+MGG_09160T0,NA,glycoside hydrolase family 3 protein
+MGG_03640T0,NA,mfs multidrug transporter
+MGG_03218T0,NA,calcipressin family protein
+MGG_07613T0,NA,acetyl- carboxylase
+MGG_16270T0,NA,NA
+MGG_04511T0,NA,mfs transporter
+MGG_10803T0,NA,integral membrane protein
+MGG_12791T0,NA,hypothetical protein MGG_12791
+MGG_14085T0,NA,short-chain oxidoreductase
+MGG_13463T0,NA,hypothetical protein MGG_13463
+MGG_07367T0,NA,cell surface spherulin 4-like
+MGG_16118T0,NA,NA
+MGG_16164T0,NA,hypothetical protein MGG_16164
+MGG_08593T0,NA,serine-threonine rich protein
+MGG_07885T0,NA,nicotinamide mononucleotide permease
+MGG_08296T0,NA,hypothetical protein MGG_08296
+MGG_07833T0,NA,ferric reductase
+MGG_04775T1,NA,polyketide synthase
+MGG_05070T0,NA,hypothetical protein MGG_05070
+MGG_09473T0,NA,hypothetical protein MGG_09473
+MGG_00710T0,NA,hypothetical protein MGG_00710
+MGG_03383T0,NA,hypothetical protein MGG_03383
+MGG_17128T0,NA,hypothetical protein MGG_17128
+MGG_08450T0,NA,asparagine synthase
+MGG_08989T0,NA,short chain dehydrogenase
+MGG_14052T0,NA,hypothetical protein MGG_14052
+MGG_16506T0,NA,hypothetical protein MGG_16506
+MGG_16792T0,NA,protein
+MGG_15620T0,NA,hypothetical protein MGG_15620
+MGG_09477T0,NA,related to a-agglutinin core protein aga1
+MGG_02372T0,NA,rep_ssvn ame: full=replication-associated protein short=rep
+MGG_12475T0,NA,-diacetylphloroglucinol specific hydrolase
+MGG_18101T0,NA,hypothetical protein OOU_Y34scaffold00591g4
+EFMOT00000000326,NA,NA
+MGG_16897T0,NA,hypothetical protein MGG_16897
+MGG_01398T0,NA,integral membrane protein
+MGG_01273T0,NA,hypothetical protein MGG_01273
+MGG_02602T0,NA,hypothetical protein MGG_02602
+MGG_10170T0,NA,membrane protein
+MGG_04603T0,NA,hypothetical protein MGG_04603
+MGG_16075T0,NA,hypothetical protein MGG_16075
+MGG_17363T0,NA,hypothetical protein MGG_17363
+MGG_15741T0,NA,hypothetical protein MGG_15741
+MGG_04994T0,NA,plasma membrane h+-atpase pma1
+MGG_09705T0,NA,nucleoside-diphosphate-sugar epimerase family protein
+MGG_18136T0,NA,hypothetical protein OOU_Y34scaffold01031g16
+MGG_10460T0,NA,NA
+MGG_11231T0,NA,glycoside hydrolase family 18 protein
+MGG_07986T0,CDIP3,hypothetical protein MGG_07986
+MGG_01026T0,NA,hydroxymethylglutaryl- synthase
+MGG_07704T0,NA,peptidase m14
+MGG_05951T0,NA,ring finger domain-containing protein
+MGG_09392T0,NA,hypothetical protein MGG_09392
+MGG_17171T0,NA,hypothetical protein MGG_17171
+MGG_05912T0,NA,n-acyl-l-amino acid amidohydrolase
+MGG_09378T0,BAS52/MoHEG13,hypothetical protein MGG_09378
+MGG_15875T0,NA,hypothetical protein MGG_15875
+MGG_07832T0,NA,high affinity copper transporter
+MGG_16038T0,NA,kelch repeat protein
+MGG_07218T0,NA,transcription factor
+MGG_15590T0,NA,hypothetical protein MGG_15590
+MGG_17488T0,NA,hypothetical protein MGG_17488
+MGG_10583T0,OPR3,12-oxophytodienoate reductase 1
+MGG_03880T0,ADH1,alcohol dehydrogenase 1
+MGG_17512T0,NA,hypothetical protein MGG_17512
+MGG_10341T0,NA,short chain oxidoreductase
+MGG_16813T0,NA,pyridoxal reductase
+MGG_00827T0,NA,hypothetical protein MGG_00827
+MGG_04244T0,NA,proline oxidase
+EFMOT00000000294,NA,NA
+MGG_06103T0,NA,family c-likeg-protein-coupled receptor protein
+MGG_17127T0,NA,hypothetical protein MGG_17127
+MGG_03557T0,NA,yor378w-like protein
+MGG_17790T0,NA,hypothetical protein MGG_17790
+MGG_09676T0,FZC52,transcription factor
+MGG_09322T0,NA,tripeptidyl peptidase precursor
+MGG_10410T0,NA,pleiotropic drug resistance protein 1
+MGG_08296T1,NA,hypothetical protein MGG_08296
+MGG_02241T0,NA,fmp21-like protein
+MGG_00054T0,NA,allantoate permease
+MGG_16821T0,NA,hypothetical protein MGG_16821
+MGG_08017T0,NA,major facilitator superfamily transporter
+MGG_09372T0,NA,fasciclin domain family protein
+MGG_10056T0,NA,poly polymerase protein
+MGG_13269T0,NA,integral membrane protein
+MGG_00078T0,NA,cfem domain-containing protein
+EFMOT00000000157,NA,NA
+MGG_02615T0,NA,hypothetical protein MGG_02615
+MGG_01783T1,NA,pyrimidine 5 -nucleotidase
+MGG_02244T1,NA,glutathione s-transferase gst3
+MGG_17627T0,NA,integral membrane protein
+MGG_03446T0,NA,globin-like protein
+MGG_16501T0,NA,NA
+MGG_10350T0,NA,lactoylglutathione lyase
+MGG_02692T0,NA,integral membrane protein
+MGG_03233T0,NA,atp-dependent dna helicase recq
+MGG_03036T0,NA,nmra-like family protein
+MGG_08652T0,NA,glycosyltransferase family 32 protein
+MGG_06824T0,NA,hypothetical protein MGG_06824
+MGG_00703T0,MAS3,gas1-like protein
+MGG_07652T0,NA,class ii aldolase adducin domain-containing protein
+MGG_08799T0,NA,hypothetical protein MGG_08799
+MGG_07789T0,NA,3-phytase
+MGG_07473T0,NA,glycoside hydrolase family 16 protein
+MGG_08267T0,NA,berberine bridge enzyme
+MGG_17896T0,NA,hypothetical protein MGG_17896
+MGG_09742T0,NA,hypothetical protein MGG_09742
+MGG_17529T0,NA,hypothetical protein MGG_17529
+MGG_02255T0,NA,hypothetical protein MGG_02255
+MGG_01770T0,NA,phosphoric ester
+MGG_03891T0,NA,hypothetical protein MGG_03891
+MGG_08055T0,NA,hypothetical protein MGG_08055
+MGG_10104T0,NA,zinc metalloprotease mde10
+MGG_15960T0,NA,NA
+MGG_17879T0,NA,hypothetical protein MGG_17879
+MGG_01454T0,NA,hypothetical protein MGG_01454
+MGG_16791T0,NA,hypothetical protein MGG_16791
+MGG_17999T0,NA,hypothetical protein MGG_17999
+MGG_17920T0,NA,hypothetical protein MGG_17920
+MGG_18065T0,NA,hypothetical protein MGG_18065
+MGG_09015T0,NA,heat shock protein 30
+MGG_02180T0,NA,hypothetical protein MGG_02180
+MGG_17890T0,NA,hypothetical protein MGG_17890
+MGG_05580T0,NA,caib baif family enzyme
+MGG_08956T0,NA,cytochrome p450 52a12
+MGG_05690T0,NA,wsc domain-containing protein
+MGG_08500T0,NA,pisatin demethylase
+MGG_11966T0,NA,cutinase
+MGG_13895T0,NA,fructose-bisphosphate aldolase
+MGG_10913T0,NA,retinol dehydrogenase 12
+MGG_14367T0,NA,mfs transporter
+MGG_02256T0,NA,fad binding domain-containing protein
+MGG_10747T0,NA,hypothetical protein MGG_10747
+MGG_08830T0,NA,hypothetical protein MGG_08830
+MGG_16964T0,NA,hypothetical protein MGG_16964
+MGG_08378T0,NA,cytochrome p450 oxidoreductase
+MGG_08552T0,NA,hypothetical protein MGG_08552
+MGG_01856T0,NA,glycosyltransferase family 90 protein
+MGG_08326T0,NA,phosphatidyl synthase
+MGG_10745T0,NA,monooxygenase
+MGG_17810T0,NA,hypothetical protein MGG_17810
+MGG_17202T0,NA,hypothetical protein MGG_17202
+MGG_12015T0,NA,hypothetical protein MGG_12015
+MGG_16196T0,NA,multidrug transporter of the major facilitator superfamily
+MGG_12644T0,NA,rho1 guanine nucleotide exchange factor 1
+MGG_16397T0,NA,hypothetical protein MGG_16397
+MGG_13276T0,NA,hypothetical protein MGG_13276
+MGG_09070T0,NA,integral membrane protein
+MGG_12655T0,AvrPi9,hypothetical protein MGG_12655
+MGG_16158T0,NA,hypothetical protein MGG_16158
+MGG_10342T0,NA,family regulatory
+MGG_09388T0,NA,flavin-binding monooxygenase-like protein
+MGG_07477T0,NA,trna-guanine transglycosylase family protein
+MGG_08118T0,NA,bzip transcription factor protein
+MGG_13557T0,NA,small secreted protein
+MGG_06854T0,NA,integral membrane protein
+MGG_08173T0,NA,nadp-dependent malic enzyme
+MGG_14398T0,NA,hypothetical protein MGG_14398
+MGG_01932T0,NA,hypothetical protein MGG_01932
+MGG_05846T0,NA,o-methyltransferase family protein
+MGG_15265T0,NA,hypothetical protein MGG_15265
+MGG_02705T0,NA,hypothetical protein MGG_02705
+MGG_05611T0,NA,hypothetical protein MGG_05611
+MGG_08480T0,NA,alpha beta hydrolase
+MGG_00947T0,NA,hypothetical protein MGG_00947
+MGG_07836T0,NA,hypothetical protein MGG_07836
+MGG_05847T0,NA,major facilitator superfamily protein
+MGG_09354T0,NA,peptide transporter mtd1
+MGG_13715T0,NA,beta-lactamase family protein
+MGG_08999T0,NA,hypothetical protein MGG_08999
+MGG_10429T0,NA,hypothetical protein MGG_10429
+MGG_02167T0,NA,major facilitator superfamily transporter
+MGG_07808T0,NA,membrane transporter
+MGG_16803T0,NA,NA
+MGG_07575T0,NA,glycoside hydrolase family 61 protein
+MGG_02115T0,NA,short-chain dehydrogenase reductase
+MGG_07882T0,NA,riboflavin transporter mch5
+MGG_17808T0,NA,hypothetical protein MGG_17808
+MGG_05902T0,NA,o-methyltransferase
+MGG_17573T0,NA,hypothetical protein MGG_17573
+MGG_08610T0,NA,hypothetical protein MGG_08610
+MGG_16647T0,NA,hypothetical protein MGG_16647
+MGG_06449T0,NA,pak-box p21-rho-binding protein
+MGG_07697T0,NA,superoxide dismutase
+MGG_00072T0,NA,isoamyl alcohol oxidase
+MGG_16282T0,NA,NA
+MGG_06225T0,NA,hypothetical protein MGG_06225
+MGG_03784T0,NA,chitin deacetylase precursor
+MGG_17720T0,NA,hypothetical protein MGG_17720
+MGG_10368T0,NA,cytochrome c peroxidase
+MGG_17985T0,NA,"hypothetical protein MGG_17985, partial"
+MGG_17761T0,NA,hypothetical protein MGG_17761
+MGG_17819T0,NA,"hypothetical protein MGG_15943, partial"
+MGG_16676T0,NA,NA
+MGG_08813T0,NA,acetyl transferase
+MGG_08670T0,NA,choline transporter
+MGG_10877T0,NA,ligninase lg6 precursor
+MGG_18088T0,NA,hypothetical protein MGG_18088
+MGG_05023T0,NA,chitin deacetylase 1
+MGG_08812T0,NA,hypothetical protein MGG_08812
+MGG_08817T0,NA,hypothetical protein MGG_08817
+MGG_09054T0,NA,hypothetical protein MGG_09054
+MGG_17729T0,NA,hypothetical protein MGG_17729
+MGG_05214T0,CON20,integral membrane protein
+MGG_14597T0,NA,hypothetical protein MGG_14597
+MGG_14369T0,NA,hypothetical protein MGCH7_ch7g45
+MGG_15716T0,NA,"hypothetical protein MGG_15943, partial"
+MGG_15715T0,NA,"hypothetical protein MGG_15943, partial"
+MGG_16074T0,NA,"hypothetical protein MGG_15943, partial"
+MGG_09055T0,HEG7,hypothetical protein MGG_09055
+MGG_09618T0,RGS6,regulator of g protein
+MGG_06538T0,NA,bys1 family protein
+MGG_16359T0,NA,NA
+MGG_14598T0,NA,tyrosinase
+MGG_10206T0,TDG6,hypothetical protein MGCH7_ch7g976
+MGG_16871T0,NA,hypothetical protein MGG_16871
+MGG_15710T0,NA,"hypothetical protein MGG_15710, partial"
+MGG_13736T0,NA,integral membrane protein
+MGG_07973T0,NA,surface protein 1
+MGG_03913T0,NA,hypothetical protein OOU_Y34scaffold00487g85
+MGG_16041T0,NA,NA
+MGG_11166T0,NA,hypothetical protein MGG_11166
+MGG_01952T0,NA,dockerin type 1
+MGG_18105T0,NA,hypothetical protein MGCH7_ch7g945
+MGG_17207T0,NA,hypothetical protein MGG_17207
+MGG_16366T0,NA,NA
+MGG_16977T0,NA,hypothetical protein MGG_16977
+MGG_12415T0,NA,chitin binding protein
+MGG_14996T0,NA,hypothetical protein MGG_14996
+MGG_10409T0,NA,hypothetical protein MGG_10409
+MGG_17467T0,NA,hypothetical protein MGG_17467
+MGG_15354T0,NA,glycosyl transferase
+MGG_05531T0,CDIP2,mac1 interacting protein 1
+MGG_17158T0,NA,hypothetical protein MGG_17158
+MGG_04965T0,NA,hypothetical protein MGG_04965
+MGG_15642T0,NA,hypothetical protein MGG_15642
+MGG_15766T0,NA,hypothetical protein MGG_15766
+MGG_00319T0,NA,glycoside hydrolase family 5 protein
+MGG_14783T0,NA,hypothetical protein MGG_14783
+MGG_04172T0,CDA1,glycosyl hydrolase
+MGG_07791T0,NA,surface protein 1
+MGG_01678T0,NA,infection structure specific protein
+MGG_11657T0,NA,c6 transcription factor
+MGG_05109T0,TDG9,hypothetical protein MGG_05109
+MGG_04935T0,NA,integral membrane protein
+MGG_00916T0,NA,hypothetical protein MGG_00916
+MGG_13719T0,NA,glycoside hydrolase
+MGG_05788T0,NA,poly(3-hydroxybutyrate) depolymerase
+MGG_00973T0,NA,fad binding domain-containing protein
+MGG_09031T0,NA,transcriptional
+MGG_17234T0,NA,hypothetical protein MGG_17234
+MGG_12111T0,NA,camp-mediated signaling protein sok1
+MGG_10107T0,NA,caleosin domain-containing protein
+MGG_16252T0,NA,NA
+MGG_10438T0,NA,cfem domain-containing protein
+MGG_16774T0,NA,NA
+MGG_17818T0,NA,"hypothetical protein MGG_17818, partial"
+MGG_08501T0,NA,glycosyltransferase family 31 protein
+MGG_01534T0,NA,hypothetical protein MGG_01534
+MGG_16872T0,NA,---NA---
+MGG_05881T0,NA,heterokaryon incompatibility
+MGG_05110T0,NA,hypothetical protein MGG_05110
+MGG_17975T0,NA,hypothetical protein MGG_17975
+MGG_06323T0,NA,solute carrier family 35 member e3
+MGG_10571T0,NA,integral membrane protein
+MGG_11870T0,MAD1,related to lustrin a
+MGG_12316T0,NA,gtp-binding protein
+MGG_16612T0,NA,hypothetical protein MGG_16612
+MGG_13578T0,NA,sulphydryl oxidase
+MGG_05432T0,NA,asparaginyl-trna synthetase
+MGG_05865T0,NA,glyoxal oxidase
+MGG_17873T0,NA,hypothetical protein MGG_17873
+MGG_17187T0,NA,hypothetical protein MGG_17187
+MGG_04525T0,NA,alternative oxidase
+MGG_00629T0,NA,hypothetical protein MGG_00629
+MGG_17085T0,NA,hypothetical protein MGG_17085
+MGG_03079T0,NA,hypothetical protein MGG_03079
+MGG_16362T0,NA,NA
+MGG_16414T0,NA,biotrophy-associated secreted protein 3
+MGG_00081T0,PHI1,cell wall protein
+MGG_15671T0,NA,udp-n-acetylglucosamine pyrophosphorylase
+MGG_10067T0,NA,nad dependent epimerase
+MGG_08495T0,NA,protein
+MGG_15353T0,NA,glycosyltransferase family 2 protein
+MGG_05016T0,ZIP11,hypothetical protein MGG_05016
+MGG_18021T0,NA,hypothetical protein MGG_18021
+MGG_16691T0,NA,NA
+MGG_05904T0,NA,hypothetical protein MGG_05904
+MGG_13275T0,MGG_13275,glyoxal oxidase
+MGG_17966T0,NA,hypothetical protein MGG_17966
+MGG_01552T0,NA,nicotinamide n-methyltransferase protein
+MGG_12937T0,NA,hypothetical protein MGG_12937
+MGG_15106T0,NA,hypothetical protein MGG_15106
+MGG_06832T0,FZC39/GCF4/TDG3,hypothetical protein MGG_06832
+MGG_14372T0,NA,cfem domain-containing protein
+MGG_12939T0,CBP1,chitin binding protein
+MGG_15772T0,NA,hypothetical protein MGG_15772
+MGG_08644T0,NA,dnase1 protein
+MGG_12107T0,NA,alpha-acetolactate decarboxylase
+MGG_17478T0,NA,---NA---
+MGG_16853T0,NA,gmc oxidoreductase
+MGG_03916T0,NA,hypothetical protein MGG_03916
+MGG_02956T0,NA,hypothetical protein MGG_02956
+MGG_17246T0,NA,cytochrome p450 4v3
+MGG_10400T0,NA,gpi-anchored cell wall beta- -endoglucanase
+MGG_02942T0,NA,f-box domain-containing protein
+MGG_08736T0,NA,carboxypeptidase 2
+MGG_07029T0,NA,hypothetical protein MGG_07029
+MGG_04119T0,NA,guanine deaminase
+MGG_02775T0,CONx2,c2h2 finger domain
+MGG_16304T0,NA,NA
+MGG_15697T0,NA,hypothetical protein MGG_15697
+MGG_17129T0,NA,hypothetical protein MGG_17129
+MGG_16690T0,NA,hypothetical protein MGG_16690
+MGG_12847T0,NA,gpi anchored serine-rich protein
+MGG_09602T0,NA,copper amine oxidase
+MGG_05871T0,PTH11,integral membrane protein
+MGG_00270T0,NA,zinc-containing alcohol
+MGG_15120T0,NA,hypothetical protein MGG_15120
+MGG_02955T0,NA,imp-specific 5 -nucleotidase 1
+MGG_03945T0,NA,acetolactate synthase
+MGG_04393T0,NA,cutinase transcription factor 1 protein
+MGG_06956T0,NA,hypothetical protein MGG_06956
+MGG_13286T0,NA,major facilitator superfamily transporter
+MGG_05721T0,NA,nol1 nop2 sun family protein
+MGG_14291T0,NA,beta-lactamase family protein
+MGG_05452T0,NA,hypothetical protein MGG_05452
+MGG_09995T0,NA,domain-containing protein
+MGG_01149T0,HEG16/IMM1,immunoreactive protein
+MGG_03715T0,NA,hypothetical protein MGG_03715
+MGG_07877T0,NA,secreted dipeptidyl peptidase
+MGG_02545T0,NA,ethyl tert-butyl ether degradation
+MGG_10208T0,NA,starch binding domain-containing protein
+MGG_02378T0,GLD2,glutamate decarboxylase
+MGG_15949T0,NA,hypothetical protein MGG_15949
+MGG_16228T1,NA,"hypothetical protein, variant"
+MGG_16251T0,NA,hypothetical protein MGG_16251
+MGG_09238T0,NA,nad dependent epimerase dehydratase protein
+MGG_16044T0,NA,hypothetical protein MGG_16044
+MGG_14792T0,NA,hypothetical protein MGG_14792
+MGG_16261T0,NA,hypothetical protein MGG_16261
+MGG_12548T0,NA,hypothetical protein MGG_12548
+MGG_10209T0,NA,carbohydrate-binding module family 20 protein
+MGG_01463T0,NA,phosphate metabolism protein 7
+MGG_01199T0,NA,hypothetical protein MGG_01199
+MGG_05327T0,HKR1,hypothetical protein OOU_Y34scaffold00033g43
+MGG_00226T0,NA,hypothetical protein MGG_00226
+MGG_03915T0,NA,pyridoxamine phosphate oxidase family protein
+MGG_14269T0,NA,hypothetical protein MGG_14269
+MGG_11036T0,NA,cellobiose dehydrogenase
+MGG_04944T0,NA,malate dehydrogenase
+MGG_09834T0,CPXB,catalase-peroxidase 2
+MGG_06064T0,CHS7,chitin synthase d
+MGG_10568T0,ERG6,sterol 24-c-methyltransferase
+EFMOT00000000218,NA,NA
+MGG_07517T0,NA,hisactophilin c49s mutant phototropin phy3 fusion protein
+MGG_09426T0,NA,phospholipase d
+MGG_01047T0,NA,ph domain-containing protein
+MGG_15337T0,NA,zygote-specific protein
+MGG_10856T0,NA,hypothetical protein MGG_10856
+MGG_15891T0,NA,hypothetical protein MGG_15891
+MGG_09986T0,NA,hypothetical protein MGG_09986
+MGG_06279T0,FZC34,binuclear zinc transcription factor
+MGG_15319T0,NA,zinc finger protein
+MGG_15886T0,NA,alcohol dehydrogenase
+MGG_14136T0,NA,quinate permease
+MGG_00325T0,NA,hypothetical protein MGG_00325
+MGG_01677T0,NA,nuclear pore complex subunit
+MGG_16882T0,NA,hypothetical protein MGG_16882
+MGG_16042T0,NA,NA
+MGG_05749T0,NA,cellobiose dehydrogenase precursor
+MGG_10361T0,NA,hypothetical protein MGG_10361
+MGG_16011T0,NA,hypothetical protein MGG_16011
+MGG_07179T0,NA,aspartic-type endopeptidase
+MGG_04934T0,NA,peptide transporter ptr2-a
+MGG_17763T0,NA,hypothetical protein MGG_17763
+MGG_02717T0,NA,hypothetical protein MGG_02717
+MGG_07016T0,NA,lipase
+MGG_11936T0,NA,fad binding domain-containing protein
+MGG_14896T0,NA,hypothetical protein MGG_14896
+MGG_09374T0,NA,hypothetical protein MGG_09374
+MGG_17801T0,NA,hypothetical protein MGG_17801
+MGG_09304T0,NA,geranylgeranyltransferase beta subunit
+MGG_09729T0,NA,mfs transporter
+MGG_00259T0,NA,hypothetical protein MGG_00259
+MGG_01428T0,NA,ring-like domain-containing protein
+MGG_08572T0,NA,hypothetical protein MGG_08572
+MGG_02728T0,NA,hypothetical protein MGG_02728
+MGG_04910T0,NA,hypothetical protein MGG_04910
+MGG_15403T0,NA,acetylxylan esterase 2
+MGG_13971T0,NA,duf563 domain-containing protein
+MGG_09001T0,NA,hypothetical protein MGG_09001
+MGG_09519T0,NA,serine threonine-protein kinase cot-1
+MGG_07146T0,NA,glycosyl hydrolase
+MGG_15552T0,NA,hypothetical protein MGG_15552
+MGG_09425T0,NA,hypothetical protein MGG_09425
+MGG_12632T0,NA,hypothetical protein MGG_12632
+MGG_09000T0,NA,cmgc cdk protein kinase
+MGG_17444T0,NA,hypothetical protein MGG_17444
+MGG_17869T0,NA,hypothetical protein MGG_17869
+MGG_15145T0,NA,hypothetical protein MGG_15145
+MGG_06738T0,NA,g-protein coupled receptor
+MGG_14006T0,NA,hypothetical protein MGG_14006
+MGG_05813T0,NA,hypothetical protein MGG_05813
+MGG_01867T0,NA,cfem domain-containing protein
+MGG_17912T0,NA,hypothetical protein MGG_17912
+MGG_05530T0,NA,hypothetical protein MGG_05530
+MGG_03967T0,NA,hypothetical protein MGG_03967
+MGG_00983T0,NA,upf0052 domain protein
+MGG_13165T0,NA,centromere binding protein b
+MGG_00577T0,NA,glucose sorbosone dehydrogenase protein
+MGG_00737T0,HEG5,mmc protein
+MGG_07514T0,ABA4,3-alpha-(or 20-beta)-hydroxysteroid dehydrogenase
+MGG_11412T0,NA,tubulin alpha chain
+MGG_13563T0,NA,helix-turn-helix-domain containing protein type
+MGG_16870T0,NA,NA
+MGG_15638T0,NA,hypothetical protein MGG_15638
+MGG_05125T0,NA,ankyrin repeat domain-containing protein 29
+MGG_16483T0,NA,NA
+MGG_10050T0,NA,cfem domain-containing protein
+MGG_06828T0,NA,major facilitator superfamily protein
+MGG_05105T0,NA,cfem domain-containing protein
+MGG_05168T0,NA,anthranilate phosphoribosyltransferase
+MGG_14703T0,NA,intracellular serine protease
+MGG_02218T0,NA,hypothetical protein MGG_02218
+MGG_16816T0,NA,hypothetical protein MGG_16816
+MGG_03968T0,NA,isoamylase domain esterase family protein
+MGG_09138T0,NA,glutathione s-transferase
+MGG_02936T0,NA,hypothetical protein MGG_02936
+MGG_03959T0,NA,hmg box protein
+MGG_13697T0,NA,protein kinase-like domain
+MGG_02000T0,NA,enoyl- hydratase isomerase family
+MGG_17835T0,NA,c6 zinc finger domain-containing protein
+MGG_02379T0,NA,hypothetical protein MGG_02379
+MGG_17105T0,NA,hypothetical protein MGG_17105
+MGG_11400T0,NA,glycosyl hydrolase
+MGG_16250T0,NA,alpha beta-hydrolase protein
+MGG_09795T0,NA,plac8 family protein
+MGG_08587T0,NA,bzip transcription factor
+MGG_11474T0,NA,membrane fusion mating protein fig1 protein
+MGG_16017T0,NA,hypothetical protein MGG_16017
+MGG_00273T0,NA,dead deah box helicase protein
+MGG_09617T0,NA,deuterolysin metalloprotease
+MGG_11537T0,NA,protein kinase-like domain
+MGG_16482T0,NA,NA
+MGG_10282T0,HEG18,hypothetical protein MGG_10282
+MGG_03582T0,NA,ring-14 protein
+MGG_09640T0,NA,alpha-amylase 1
+MGG_08271T1,NA,oligosaccharide translocation protein rft1
+MGG_13289T0,NA,hypothetical protein MGG_13289
+MGG_16864T0,NA,hypothetical protein MGG_16864
+MGG_11634T0,NA,ankyrin repeat domain containing protein
+MGG_01304T0,NA,major facilitator superfamily transporter
+MGG_03363T0,NA,hypothetical protein MGG_03363
+MGG_13012T0,NA,peptidase family m28
+MGG_08662T0,NA,hypothetical protein MGG_08662
+MGG_00142T0,NA,bem46 family protein
+MGG_09648T0,NA,carbohydrate-binding wsc domain protein
+MGG_14701T0,NA,g-protein coupled receptor 1
+MGG_06364T0,GCF7,c2h2 transcription factor
+MGG_06153T0,NA,molybdopterin binding domain-containing protein
+MGG_08405T0,NA,short-chain dehydrogenase
+MGG_00620T0,DAC1,n-acetylglucosamine-6-phosphate deacetylase
+MGG_02253T0,NA,cell surface protein
+MGG_15441T0,NA,mfs transporter
+MGG_00563T0,NA,hypothetical protein MGG_00563
+MGG_05344T0,SNOD1/MSP1/SM1,epl1 protein
+MGG_12848T0,NA,sphingoid long-chain base transporter rsb1
+MGG_10713T0,NA,integral membrane protein
+MGG_12936T0,AOX,alternative oxidase
+MGG_02884T0,MFP1,beta-ig-h3 fasciclin
+MGG_11663T0,NA,zinc-binding oxidoreductase
+MGG_05761T0,NA,hsp70 family chaperone
