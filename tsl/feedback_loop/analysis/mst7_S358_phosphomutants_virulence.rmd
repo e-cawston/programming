@@ -1,6 +1,8 @@
 ```{r}
 source("analysis/scripts/spray_infection.R")
 library(here)
+library(tidyverse)
+library(readxl)
 raw_dir <- here("raw")
 raw_file <- "spray_infections.xlsx"
 
@@ -15,11 +17,62 @@ my_order <- c(
   "MST7S358A-GFP 3.5"
 )
 
-my_reps <- c(1,2,3)   # for example, only biorep 1 and 3
-
+my_reps <- c(1,2,4,5)   # for example, only biorep 1 and 3
 
 plot_genotype_boxplot(
     file.path(raw_dir, raw_file),
     genotype_order = my_order,
     reps = my_reps)
+```
+
+## One-way ANOVA
+
+```{r}
+# Perform one-way ANOVA
+anova_result <- perform_anova(
+    file.path(raw_dir, raw_file),
+    genotype_order = my_order,
+    reps = my_reps)
+anova_summary <- summary(anova_result)
+print(anova_summary)
+
+# Extract p-value from ANOVA
+anova_pvalue <- anova_summary[[1]]$`Pr(>F)`[1]
+anova_fstat <- anova_summary[[1]]$`F value`[1]
+```
+
+## Tukey Post-hoc Test
+
+```{r}
+# Perform Tukey HSD test
+tukey_result <- perform_tukey(
+    file.path(raw_dir, raw_file),
+    genotype_order = my_order,
+    reps = my_reps)
+print(tukey_result)
+```
+
+## Figure with Tukey Test Results
+
+```{r}
+# Create figure with significance bars and stars
+fig_tukey <- plot_with_tukey_annotations(
+    file.path(raw_dir, raw_file),
+    genotype_order = my_order,
+    reps = my_reps)
+
+print(fig_tukey)
+```
+
+## Save Figure with ggsave
+
+```{r}
+# Save the Tukey test figure
+ggsave(
+  filename = here("figures/tukey_test_results.png"),
+  plot = fig_tukey,
+  width = 10,
+  height = 7,
+  dpi = 300
+)
 ```
