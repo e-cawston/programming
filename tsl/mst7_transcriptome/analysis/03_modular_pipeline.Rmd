@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE, message = TRUE, warning = TRUE)
 ```{r package-check, warning=TRUE}
 required_pkgs <- c(
   "dplyr", "readr", "purrr", "tidyr", "stringr", "tibble",
-  "here", "ggplot2", "reshape2", "sleuth", "UpSetR", "RankProd"
+  "here", "ggplot2", "reshape2", "sleuth", "UpSetR", "RankProd", "openxlsx"
 )
 missing_pkgs <- required_pkgs[!vapply(required_pkgs, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))]
 if (length(missing_pkgs) > 0) {
@@ -173,8 +173,14 @@ tryCatch(
 tryCatch(
   {
     cat("\nGenerating upset plot for cross-experiment (rank products) comparisons...\n")
+    rank_product_upset_labels <- c(
+      cross_exp_labels,
+      "mst7_vs_Guy11",
+      "pmk1_vs_Guy11M"
+    )
+
     cross_deg_sets <- load_rank_product_deg_tables(
-      comparison_labels = cross_exp_labels,
+      comparison_labels = rank_product_upset_labels,
       rp_dir = file.path(results_dir, "rank_products"),
       pfp_threshold = 0.05
     )
@@ -361,6 +367,70 @@ tryCatch(
     }
   },
   error = function(e) warning("Gene list export failed: ", e$message)
+)
+```
+
+# Rank-product MGG lists
+
+The workbook contains one sheet per comparison with all unique MGGs called
+differentially expressed at one or more timepoints, plus one sheet per
+comparison containing only MGGs not found in any of the other comparisons.
+
+```{r rank-product-mgg-workbook}
+tryCatch(
+  {
+    rank_product_mgg_comparisons <- c(
+      "Guy11_vs_mst7",
+      "Guy11M_vs_pmk1",
+      "Guy11_vs_Guy11M",
+      "mst7_vs_pmk1"
+    )
+
+    rank_product_mgg_file <- file.path(
+      tables_dir,
+      "rank_products_unique_MGGs.xlsx"
+    )
+
+    upset_sets <- load_rank_product_deg_tables(
+      comparison_labels = c(
+        "mst7_vs_pmk1",
+        "Guy11_vs_Guy11M",
+        "mst7_vs_Guy11",
+        "pmk1_vs_Guy11M"
+      ),
+      rp_dir = file.path(results_dir, "rank_products"),
+      pfp_threshold = 0.05
+    )
+    upset_ids <- unique(unlist(upset_sets, use.names = FALSE))
+    upset_membership <- sapply(
+      upset_sets,
+      function(ids) upset_ids %in% ids
+    )
+    mst7_guy11_mst7_pmk1_overlap <- upset_ids[
+      upset_membership[, "mst7_vs_Guy11"] &
+        upset_membership[, "mst7_vs_pmk1"] &
+        rowSums(upset_membership) == 2
+    ]
+
+    write_rank_product_mgg_workbook(
+      comparison_labels = rank_product_mgg_comparisons,
+      rp_dir = file.path(results_dir, "rank_products"),
+      out_file = rank_product_mgg_file,
+      pfp_threshold = 0.05,
+      annotation_file = file.path(
+        project_dir,
+        "raw",
+        "Copy of Magnagenes FINAL.xlsx"
+      ),
+      annotation_sheet = "Sheet3",
+      additional_sets = list(
+        upset_mst7Guy11_mst7pmk1 = mst7_guy11_mst7_pmk1_overlap
+      )
+    )
+
+    cat("Rank-product MGG workbook written to ", rank_product_mgg_file, "\n", sep = "")
+  },
+  error = function(e) warning("Rank-product MGG workbook export failed: ", e$message)
 )
 ```
 

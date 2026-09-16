@@ -28,6 +28,7 @@ cat("\nInstalling packages from CRAN and Bioconductor...\n\n")
 packages <- c(
   # Already have these, but ensure they're up to date
   "ggplot2",
+  "openxlsx",
   "dplyr", 
   "readr",
   "tibble",
@@ -50,7 +51,7 @@ pak::pkg_install(packages, ask = FALSE, upgrade = FALSE)
 cat("\n\n=== Installation Complete ===\n")
 cat("\nFinal package check:\n")
 
-check_pkgs <- c('ggplot2', 'sleuth', 'UpSetR', 'RankProd', 'dplyr', 'readr', 'tidyr')
+check_pkgs <- c('ggplot2', 'sleuth', 'UpSetR', 'RankProd', 'openxlsx', 'dplyr', 'readr', 'tidyr')
 for(p in check_pkgs) {
   status <- requireNamespace(p, quietly = TRUE)
   symbol <- if(status) "✓" else "✗"

@@ -1,5 +1,6 @@
 required_pkgs <- c(
-  "dplyr", "readr", "purrr", "stringr", "tibble", "here", "ggplot2", "RankProd"
+  "dplyr", "readr", "purrr", "stringr", "tibble", "here", "ggplot2",
+  "openxlsx", "RankProd"
 )
 missing_pkgs <- required_pkgs[!vapply(required_pkgs, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))]
 if (length(missing_pkgs) > 0) {
@@ -215,6 +216,167 @@ load_rank_product_deg_tables <- function(comparison_labels,
 
   names(deg_list) <- comparison_labels
   purrr::compact(deg_list)
+}
+
+# Write pooled rank-product MGG lists and comparison-exclusive MGG lists to
+# one workbook. Each comparison's first sheet contains IDs significant at one
+# or more timepoints; its second sheet excludes IDs found in any other
+# comparison supplied to comparison_labels.
+write_rank_product_mgg_workbook <- function(
+    comparison_labels,
+    rp_dir = here("results", "rank_products"),
+    out_file = here("results", "tables", "rank_products_unique_MGGs.xlsx"),
+    pfp_threshold = 0.05,
+    annotation_file = here("raw", "Copy of Magnagenes FINAL.xlsx"),
+    annotation_sheet = "Sheet3",
+    additional_sets = NULL) {
+  if (!requireNamespace("openxlsx", quietly = TRUE)) {
+    stop(
+      "The openxlsx package is required to write the rank-product MGG workbook. ",
+      "Install it with install.packages('openxlsx')."
+    )
+  }
+
+  comparison_labels <- unique(as.character(comparison_labels))
+  if (length(comparison_labels) == 0) {
+    stop("comparison_labels must contain at least one comparison label.")
+  }
+
+  if (!file.exists(annotation_file)) {
+    stop("Magnagenes annotation file not found: ", annotation_file)
+  }
+
+  annotation <- openxlsx::read.xlsx(
+    annotation_file,
+    sheet = annotation_sheet,
+    colNames = TRUE,
+    check.names = FALSE
+  )
+
+  required_annotation_columns <- c(
+    "Gene",
+    "gene.name",
+    "process.affected",
+    "detailed.mutant.phenotype",
+    "PMID.or.link.to.publication",
+    "BLAST2GO.annotation",
+    "Pfam"
+  )
+  missing_annotation_columns <- setdiff(
+    required_annotation_columns,
+    names(annotation)
+  )
+  if (length(missing_annotation_columns) > 0) {
+    stop(
+      "Magnagenes annotation sheet is missing columns: ",
+      paste(missing_annotation_columns, collapse = ", ")
+    )
+  }
+
+  # The workbook contains two columns with the same PMID heading. Rename
+  # them explicitly so both publication fields are retained in the output.
+  pmid_columns <- which(names(annotation) == "PMID.or.link.to.publication")
+  pmid_names <- paste0("PMID.or.link.to.publication.", seq_along(pmid_columns))
+  names(annotation)[pmid_columns] <- pmid_names
+
+  annotation <- annotation %>%
+    transmute(
+      annotation_key = str_remove(as.character(Gene), "T\\d+$"),
+      gene_name = gene.name,
+      process_affected = process.affected,
+      detailed_mutant_phenotype = detailed.mutant.phenotype,
+      pmid_or_link_to_publication_1 = .data[[pmid_names[1]]],
+      pmid_or_link_to_publication_2 = if (length(pmid_names) > 1) {
+        .data[[pmid_names[2]]]
+      } else {
+        NA_character_
+      },
+      blast2go_annotation = BLAST2GO.annotation,
+      pfam = Pfam
+    ) %>%
+    distinct(annotation_key, .keep_all = TRUE)
+
+  deg_sets <- load_rank_product_deg_tables(
+    comparison_labels = comparison_labels,
+    rp_dir = rp_dir,
+    pfp_threshold = pfp_threshold
+  )
+
+  missing_labels <- setdiff(comparison_labels, names(deg_sets))
+  if (length(missing_labels) > 0) {
+    stop(
+      "No rank-product files were found for: ",
+      paste(missing_labels, collapse = ", ")
+    )
+  }
+
+  all_ids <- unique(unlist(deg_sets, use.names = FALSE))
+  exclusive_sets <- map(comparison_labels, function(label) {
+    other_ids <- unique(unlist(deg_sets[names(deg_sets) != label], use.names = FALSE))
+    setdiff(deg_sets[[label]], other_ids)
+  })
+  names(exclusive_sets) <- comparison_labels
+
+  workbook_sheets <- c(
+    setNames(deg_sets, paste0("all_", comparison_labels)),
+    setNames(exclusive_sets, paste0("exclusive_", comparison_labels))
+  )
+
+  if (!is.null(additional_sets)) {
+    if (!is.list(additional_sets) || is.null(names(additional_sets))) {
+      stop("additional_sets must be a named list of gene vectors.")
+    }
+
+    additional_sheets <- map(additional_sets, ~ unique(as.character(.x)))
+    names(additional_sheets) <- names(additional_sets)
+    workbook_sheets <- c(workbook_sheets, additional_sheets)
+  }
+
+  dir.create(dirname(out_file), recursive = TRUE, showWarnings = FALSE)
+  workbook <- openxlsx::createWorkbook()
+
+  for (sheet_name in names(workbook_sheets)) {
+    openxlsx::addWorksheet(workbook, sheet_name)
+
+    sheet_data <- tibble(MGG = sort(unique(workbook_sheets[[sheet_name]]))) %>%
+      mutate(annotation_key = str_remove(MGG, "T\\d+$")) %>%
+      left_join(annotation, by = "annotation_key") %>%
+      select(
+        MGG,
+        gene_name,
+        process_affected,
+        detailed_mutant_phenotype,
+        pmid_or_link_to_publication_1,
+        pmid_or_link_to_publication_2,
+        blast2go_annotation,
+        pfam
+      ) %>%
+      setNames(c(
+        "MGG",
+        "Gene name",
+        "Process affected",
+        "Detailed mutant phenotype",
+        "PMID or link to publication 1",
+        "PMID or link to publication 2",
+        "BLAST2GO annotation",
+        "Pfam"
+      ))
+
+    openxlsx::writeData(
+      workbook,
+      sheet = sheet_name,
+      x = sheet_data
+    )
+  }
+
+  openxlsx::saveWorkbook(workbook, out_file, overwrite = TRUE)
+
+  invisible(list(
+    all = deg_sets,
+    exclusive = exclusive_sets,
+    all_ids = all_ids,
+    output_file = out_file
+  ))
 }
 
 plot_rank_products_mirrored <- function(rp_table,

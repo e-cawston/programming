@@ -11,7 +11,7 @@ cat("\nInstalling required packages...\n")
 renv::install(c(
   'dplyr', 'readr', 'purrr', 'tidyr', 'stringr', 'tibble',
   'here', 'ggplot2', 'reshape2', 'UpSetR',
-  'sleuth', 'RankProd'
+  'sleuth', 'RankProd', 'openxlsx'
 ))
 
 cat("\nFinal check:\n")
