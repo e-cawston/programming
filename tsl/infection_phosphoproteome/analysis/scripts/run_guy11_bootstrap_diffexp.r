@@ -14,6 +14,8 @@ suppressMessages({
 source("analysis/scripts/phosphoproteome_diffexp_bootstrap.r")
 
 dir.create("results", showWarnings = FALSE, recursive = TRUE)
+figure_dir <- "results/figures/guy11_bootstrap"
+dir.create(figure_dir, showWarnings = FALSE, recursive = TRUE)
 checkpoint_dir <- "results/guy11_bootstrap_checkpoints"
 
 # Respect a SLURM CPU allocation if running under sbatch/srun (SLURM_CPUS_PER_TASK);
@@ -60,7 +62,7 @@ stage1_results <- dplyr::bind_rows(
 writexl::write_xlsx(stage1_results, "results/guy11_timepoint_vs_0h_bootstrap.xlsx")
 
 ggplot2::ggsave(
-  "results/guy11_timepoint_vs_0h_bootstrap_volcano.png",
+  file.path(figure_dir, "guy11_timepoint_vs_0h_bootstrap_volcano.png"),
   plot_diffexp_volcano(stage1_results, n_boot = 10000),
   width = 16, height = 7
 )
@@ -88,7 +90,7 @@ cat("\nKinetics correlation summary (Pearson r per peptide, mst7 vs pmk1):\n")
 print(summary(kinetics_cor$r))
 
 ggplot2::ggsave(
-  "results/guy11_kinetics_correlation_distribution.png",
+  file.path(figure_dir, "guy11_kinetics_correlation_distribution.png"),
   plot_kinetics_correlation_distribution(kinetics_cor),
   width = 10, height = 7
 )
@@ -97,4 +99,5 @@ message("[", format(Sys.time(), "%H:%M:%S"), "] DONE. Key outputs:")
 message("  results/guy11_timepoint_vs_0h_bootstrap.xlsx        -- stage 1 per-peptide log2FC/p vs 0h, both experiments")
 message("  results/guy11_significant_peptides.txt              -- peptides passing |log2FC|>=1 & p<0.05")
 message("  results/guy11_kinetics_correlation.xlsx             -- stage 2 per-peptide Pearson r (mst7 vs pmk1 trajectory)")
-message("  results/guy11_kinetics_correlation_distribution.png -- histogram of those r values")
+message("  ", file.path(figure_dir, "guy11_kinetics_correlation_distribution.png"),
+        " -- histogram of those r values")

@@ -524,8 +524,8 @@ plot_peptide_kinetics <- function(long_data, peptide_id,
 }
 
 #' Grid of kinetics trajectories for several peptides at once, one small
-#' panel per peptide (faceted), labelled with each peptide's gene ID and
-#' its kinetics correlation r rather than the raw modified-sequence string.
+#' panel per peptide (faceted), labelled with the modified peptide sequence
+#' and its kinetics correlation r.
 #'
 #' @param long_data Long tibble from [build_guy11_between_experiments_data()]
 #' @param selection A tibble with columns `peptide` and `r` (and optionally
@@ -540,17 +540,9 @@ plot_peptide_kinetics_grid <- function(long_data, selection,
                                        ncol = 5, title = NULL) {
   labels <- selection %>%
     dplyr::mutate(
-      # gene_id (from the "Protein ID" column) is a full FASTA header, e.g.
-      # "MGG_17596T0 pep chromosome:MG8:... description:...": keep only the
-      # leading transcript ID token so facet strips stay short and legible.
-      gene_short = if ("gene_id" %in% names(selection)) {
-        stringr::str_extract(.data$gene_id, "^\\S+")
-      } else {
-        NA_character_
-      },
       label = sprintf(
         "%s\nr = %.3f",
-        dplyr::coalesce(.data$gene_short, .data$peptide),
+        .data$peptide,
         .data$r
       ),
       label = factor(.data$label, levels = unique(.data$label))

@@ -1,0 +1,3 @@
+Guy11 filtered VSN kinetics example figures: peptide sequence and exact assigned modifications label each facet; curves show per-timepoint means in the MST7 and PMK1 experiments.
+Guy11 filtered VSN abundance scatterplots: each figure compares the same timepoint between MST7 and PMK1; each point is one shared peptide sequence + modification identity; the line is a linear fit and the subtitle reports R-squared.
+Guy11 filtered VSN correlation distribution figures summarize per-site Pearson, Spearman, and model-predicted Pearson trajectory correlations.

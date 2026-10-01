@@ -125,6 +125,56 @@ filter_min_biorep_intensity <- function(df, intensity_cols = NULL, min_bioreps =
   df[apply(measured_bioreps, 1, max) >= min_bioreps, , drop = FALSE]
 }
 
+# Keep VSN-normalized peptides observed in at least min_bioreps at
+# min_timepoints or more. VSN values may be negative, so missingness is
+# determined by finite/non-NA measurements rather than positivity.
+filter_vsn_min_timepoints_bioreps <- function(df, intensity_cols = NULL,
+                                              min_timepoints = 3,
+                                              min_bioreps = 2) {
+  validate_minimum <- function(value, name) {
+    if (length(value) != 1 || !is.numeric(value) || is.na(value) ||
+        value < 1 || value != as.integer(value)) {
+      stop(name, " must be a positive integer")
+    }
+  }
+  validate_minimum(min_timepoints, "min_timepoints")
+  validate_minimum(min_bioreps, "min_bioreps")
+
+  if (is.null(intensity_cols)) {
+    intensity_cols <- colnames(df)[
+      stringr::str_detect(
+        colnames(df),
+        "^.+_((([0-9]+)(_[0-9]+)?h)|spores)_[0-9]+$"
+      )
+    ]
+  } else {
+    missing_cols <- setdiff(intensity_cols, colnames(df))
+    if (length(missing_cols) > 0) {
+      stop("Intensity columns not found: ", paste(missing_cols, collapse = ", "))
+    }
+  }
+
+  if (length(intensity_cols) == 0) {
+    stop("No VSN intensity columns found")
+  }
+
+  sample_parts <- stringr::str_match(
+    intensity_cols, "^.+_((?:[0-9]+(?:_[0-9]+)?h)|spores)_([0-9]+)$"
+  )
+  if (anyNA(sample_parts[, 2])) {
+    stop("VSN intensity columns must end with a recognized timepoint and biorep: ",
+         paste(intensity_cols[is.na(sample_parts[, 2])], collapse = ", "))
+  }
+
+  values <- vapply(df[intensity_cols], function(x) as.numeric(x), numeric(nrow(df)))
+  timepoint_groups <- split(seq_along(intensity_cols), sample_parts[, 2])
+  timepoint_counts <- vapply(timepoint_groups, function(indices) {
+    rowSums(is.finite(values[, indices, drop = FALSE]), na.rm = TRUE)
+  }, numeric(nrow(df)))
+
+  df[rowSums(timepoint_counts >= min_bioreps) >= min_timepoints, , drop = FALSE]
+}
+
 # Full cleanup wrapper
 cleanup_phospho_dataset <- function(path, mod_col = "Assigned Modifications",
                                     mass_shift = 79.9663, tolerance = 0,
@@ -155,5 +205,4 @@ cleanup_phospho_dataset <- function(path, mod_col = "Assigned Modifications",
     phospho_only_biorep_filtered = phospho_only_biorep_filtered
   )
 }
-
 
