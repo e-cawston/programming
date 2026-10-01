@@ -240,17 +240,9 @@ ggplot2::ggsave(file.path(qc_figure_dir, "mst7_total_phospho_proteins_only.png")
                 plot_total_phospho_proteins(mst7_summary_only), width = 7, height = 5)
 ```
 
-## Save cleaned data frames
-
-```{r save-cleaned-dfs}
-# PMK1
-write.csv(pmk1_phospho_all,  "results/pmk1_phospho_all.csv",  row.names = FALSE)
-write.csv(pmk1_phospho_only, "results/pmk1_phospho_only.csv", row.names = FALSE)
-
-# MST7
-write.csv(mst7_phospho_all,  "results/mst7_phospho_all.csv",  row.names = FALSE)
-write.csv(mst7_phospho_only, "results/mst7_phospho_only.csv", row.names = FALSE)
-```
+The cleaned PMK1 and MST7 tables are already saved as Excel workbooks in the
+cleanup section. Duplicate CSV exports are omitted because they create very
+large result files without adding analysis inputs.
 
 ## Venn analyses
 
